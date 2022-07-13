@@ -4,36 +4,40 @@ require_once "./bean/User.php";
 require_once "./service/factory/FactoryService.php";
 require_once "./util/permission/PermissionCtrl.php";
 require_once "./util/HtmlPageWriter.php";
+require_once "./resources/conf_const.php";
 
-class UpdateUserCommand implements Command
+class UpdateUserCommand extends PermissionCtrl implements Command
 {
     private Logger $logger;
 
     public function __construct()
     {
         $this->logger = Logger::getLogger();
+        $this->setAccessedRoles([ADMIN]);
     }
 
     public function execute(): void
     {
-        PermissionCtrl::permissionCheck("admin");
+        if ($this->checkUserPermission()){
+
+            $newUser = new User();
+
+            $newUser->setId($_POST["user_id"]);
+            $newUser->setEmail($_POST["user_email"]);
+            $newUser->setCountry($_POST["user_country"]);
+            $newUser->setName($_POST["user_name"]);
+            $newUser->setRole($_POST["user_role"]);
+            $newUser->setAvatarPath($this->extractPicturePath($_POST["user_path"]));
 
 
-        $newUser = new User();
-
-        $newUser->setId($_POST["user_id"]);
-        $newUser->setEmail($_POST["user_email"]);
-        $newUser->setCountry($_POST["user_country"]);
-        $newUser->setName($_POST["user_name"]);
-        $newUser->setRole($_POST["user_role"]);
-        $newUser->setAvatarPath($this->extractPicturePath($_POST["user_path"]));
-
-
-        $userService = FactoryService::getInstance()->getUserService();
-        if ($userService->update($newUser)) {
-            Router::redirect();
-        } else {
-            HtmlPageWriter::writeUpdateUserHtmlForm($newUser);
+            $userService = FactoryService::getInstance()->getUserService();
+            if ($userService->update($newUser)) {
+                Router::redirect();
+            } else {
+                HtmlPageWriter::writeUpdateUserHtmlForm($newUser);
+            }
+        }else{
+            HtmlPageWriter::writeAccessDeniedHTML();
         }
     }
 

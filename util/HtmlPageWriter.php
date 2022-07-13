@@ -142,8 +142,6 @@ class HtmlPageWriter
 //        echo "</div>";
 
 
-
-
         if (!key_exists('page', $_GET)) {
             $_GET['page'] = 1;
         }
@@ -229,7 +227,7 @@ class HtmlPageWriter
         if (key_exists("not_valid_user_data", $_SESSION)) {
             /** @var User $notValidUser */
             $notValidUser = $_SESSION["not_valid_user_data"];
-            echo "<div>".$_SESSION['validator_response']."</div>
+            echo "<div>" . $_SESSION['validator_response'] . "</div>
        <form action='/' method='post'><br/>
             <input type='text' name='user_email' value='" . $notValidUser->getEmail() . "'/><br/>
             <input type='text' name='user_country' value='" . $notValidUser->getCountry() . "'/><br/>
@@ -261,7 +259,6 @@ class HtmlPageWriter
         }
 
 
-
         echo "
        <form action='/' method='post' enctype='multipart/form-data'><br/>
             <input type='text' name='user_email' value='" . $user->getEmail() . "'/><br/>
@@ -277,7 +274,7 @@ class HtmlPageWriter
                         <input type='radio' name='user_role'  value='user' checked/>user<br/>";
                 break;
         }
-        echo "<img src='".$user->getAvatarPath()."' width=70 height=70/>";
+        echo "<img src='" . $user->getAvatarPath() . "' width=70 height=70/>";
         echo "  
                 <input name='picture' type='file' />
                 <input type='hidden' name='command' value='update_user_by_id'/>
@@ -369,5 +366,10 @@ class HtmlPageWriter
         echo "<h3>Incorrect login or password</h3>";
         self::writeSignInForm();
 
+    }
+
+    public static function writeAccessDeniedHTML(): void
+    {
+        echo "<h1>Access was denied!<br><a href='/'>HOME</a></h1>";
     }
 }

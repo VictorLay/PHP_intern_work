@@ -1,36 +1,50 @@
 <?php
+require_once "./bean/User.php";
+require_once "./resources/conf_const.php";
 
 class PermissionCtrl
 {
     //todo replace with enum
-    public static function permissionCheck(string $role): bool
-    {
-        /** @var User $user */
-        if (key_exists('user', $_SESSION)) {
-            $user = $_SESSION['user'];
+    private array $accessedRoles;
 
-            switch ($user->getRole()) {
-                case $role:
+
+    public function __construct()
+    {
+        $this->accessedRoles = array();
+    }
+
+
+    /**
+     * @param array $accessedRoles
+     */
+    protected function setAccessedRoles(array $accessedRoles): void
+    {
+        $this->accessedRoles = $accessedRoles;
+    }
+
+
+    protected function checkUserPermission(string $userIndexInTheSession = 'user'):bool{
+        if (key_exists($userIndexInTheSession, $_SESSION)){
+            /** @var User $user */
+            $user = $_SESSION["$userIndexInTheSession"];
+            $userRole = $user->getRole();
+            /** @var string $role */
+            foreach ($this->accessedRoles as $role){
+                if ($userRole == $role){
                     return true;
-                case $role:
-                    return true;
-                default:
-                    Router::redirect("error_pages/permission_error.html");
+                }
             }
         }
-        Router::redirect("error_pages/permission_error.html");
+        return false;
     }
 
     public static function getRoleId(string $role): ?int
     {
-        switch ($role) {
-            case "user":
-                return 2;
-            case "admin":
-                return 1;
-            default:
-                return null;
-        }
+        return match ($role) {
+            USER => 2,
+            ADMIN => 1,
+            default => null,
+        };
 
     }
 }
