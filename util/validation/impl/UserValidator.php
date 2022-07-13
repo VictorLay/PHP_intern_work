@@ -1,4 +1,5 @@
 <?php
+require_once "./resources/CustomConstants.php";
 require_once "./util/validation/EntityValidator.php";
 require_once './bean/User.php';
 require_once './util/logger/Logger.php';
@@ -8,6 +9,8 @@ class UserValidator implements EntityValidator
 
     public static function isValid(Entity $entity): bool
     {
+        //todo Не использовать глобальные переменные в утилитных методах/ Переделать при наличии времени
+        // Сильная привязка кода контроллера к реализции метода
         /** @var User $entity */
         $name = $entity->getName();
         $role = $entity->getRole();
@@ -22,9 +25,12 @@ class UserValidator implements EntityValidator
 
         $logger = Logger::getLogger();
         $logger->log( '$isValidName = '.$isValidName.'$isValidRole = '.$isValidRole.'$isValidCountry = '.$isValidCountry.'$isValidEmail = '.$isValidEmail,DEBUG_LEVEL);
+        $logger->log("isValidPath = ".$isValidPath, DEBUG_LEVEL);
         $validationResponse = ($isValidName?'':"The name '$name' isn't valid.<br>").
             ($isValidCountry?'':"The name '$country' isn't valid.<br>").
+            ($isValidEmail?'':"The name '$email' isn't valid.<br>").
             ($isValidEmail?'':"The name '$email' isn't valid.<br>");
+
         $_SESSION['validator_response'] = $validationResponse;
         $logger->log("$validationResponse" ,DEBUG_LEVEL);
 //        return true;
@@ -37,12 +43,12 @@ class UserValidator implements EntityValidator
         if (is_null($field)){
             return false;
         }
-        $logger = Logger::getLogger();
-        $notValid = preg_match('/^\s*$/',$field);
-        $notValid |= preg_match("/.{45,}/", $field);
-        $notValid |= preg_match("/[\d!@'\"#$%\^&*)(+=\/\\\|}{;.?]+/", $field);
+        $isValid = !(preg_match('/^\s*$/',$field));
+        $isValid &= preg_match("/.{3,45}/", $field);
 
-        return !($notValid);
+        $isValid &= !(preg_match("/[\d!@'\"#$%\^&*)(+=\/\\\|}{;.?]+/", $field));
+
+        return $isValid;
     }
 
 
@@ -50,10 +56,16 @@ class UserValidator implements EntityValidator
         if (is_null($field)){
             return false;
         }
-        $notValid = preg_match('/^\s*$/',$field);
-        $notValid &= preg_match("/.{45,}/", $field);
-        $notValid &= preg_match("/^\.\/resources\/[a-zA-Z\d]+\.(jpg|png|jpeg)$/", $field);
-        return !($notValid);
+        $logger = Logger::getLogger();
+
+        $isValid = !preg_match('/^\s*$/',$field);
+        $logger->log("path $isValid", DEBUG_LEVEL);
+        $isValid &= preg_match("/.{1,45}/", $field);
+        $logger->log("path $isValid", DEBUG_LEVEL);
+        $isValid &= preg_match("/^\.\/resources\/\w+\.(jpg|png|jpeg)$/", $field);
+        $logger->log("path $isValid", DEBUG_LEVEL);
+
+        return $isValid;
     }
 
     public static function isValidMail(string $mail):bool{

@@ -36,7 +36,7 @@ class UserServiceImpl implements UserService
         return $this->userDao->countUsers();
     }
 
-    public function create(User $user): void
+    public function create(User $user): bool
     {
         $this->userDao->beginTransaction();
         try {
@@ -45,25 +45,38 @@ class UserServiceImpl implements UserService
                 $this->userDao->create($user);
             } else {
                 $_SESSION['not_valid_user_data'] = $user;
-                Router::redirect("/not_valid_data.php");
+                return false;
             }
             $this->userDao->commit();
+            return true;
         } catch (DaoException $exception) {
             $this->userDao->rollback();
-            $this->logger->log("The new user wasn't been created. ");
-            throw new ServiceException($exception);
-        }
+            $_SESSION['not_valid_user_data'] = $user;
 
+            $this->logger->log("The new user wasn't been created. ".$exception, ERROR_LEVEL);
+            $_SESSION['validator_response'] .= "Oupss... You couldn't to create user with such Email...";
+            return false;
+        }
     }
 
-    //todo add transaction
-    public function update(User $user): void
+    public function update(User $user): bool
     {
-        if (UserValidator::isValid($user)){
-            $this->userDao->update($user);
-        }else{
+        $this->userDao->beginTransaction();
+        try {
+            if (UserValidator::isValid($user)) {
+                $this->userDao->update($user);
+            } else {
+                $_SESSION['not_valid_user_data'] = $user;
+                return false;
+            }
+            $this->userDao->commit();
+            return true;
+        } catch (DaoException $exception) {
+            $this->userDao->rollback();
+            $this->logger->log("User wasn't updated!", ERROR_LEVEL);
             $_SESSION['not_valid_user_data'] = $user;
-            Router::redirect("/not_valid_data.php");
+            $_SESSION['validator_response'] .= "Oupss... You couldn't to update user with such Email...";
+            return false;
         }
     }
 
@@ -76,6 +89,7 @@ class UserServiceImpl implements UserService
     {
         return $this->userDao->read($authorizationInfo);
     }
+
 
 
     public function delete(int $userId): void

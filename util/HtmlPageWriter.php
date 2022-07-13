@@ -78,6 +78,7 @@ class HtmlPageWriter
 <input type='hidden' value='" . $userInfo->getRole() . "' name='user_role'>
 <input type='hidden' value='" . $userInfo->getId() . "' name='user_id'>
 <input type='hidden' value='update_user_by_id_page' name='command'>
+<input type='hidden' value='" . $userInfo->getAvatarPath() . "' name='user_path'>
 <input type='submit' value='update'>
 </form></td>";
 
@@ -228,7 +229,7 @@ class HtmlPageWriter
         if (key_exists("not_valid_user_data", $_SESSION)) {
             /** @var User $notValidUser */
             $notValidUser = $_SESSION["not_valid_user_data"];
-            echo "
+            echo "<div>".$_SESSION['validator_response']."</div>
        <form action='/' method='post'><br/>
             <input type='text' name='user_email' value='" . $notValidUser->getEmail() . "'/><br/>
             <input type='text' name='user_country' value='" . $notValidUser->getCountry() . "'/><br/>
@@ -253,6 +254,14 @@ class HtmlPageWriter
 
     public static function writeUpdateUserHtmlForm(User $user): void
     {
+        if (key_exists("not_valid_user_data", $_SESSION)) {
+            /** @var User $notValidUser */
+//            $notValidUser = $_SESSION["not_valid_user_data"];
+            echo "<div>" . $_SESSION['validator_response'] . "</div>";
+        }
+
+
+
         echo "
        <form action='/' method='post' enctype='multipart/form-data'><br/>
             <input type='text' name='user_email' value='" . $user->getEmail() . "'/><br/>
@@ -268,10 +277,12 @@ class HtmlPageWriter
                         <input type='radio' name='user_role'  value='user' checked/>user<br/>";
                 break;
         }
+        echo "<img src='".$user->getAvatarPath()."' width=70 height=70/>";
         echo "  
                 <input name='picture' type='file' />
                 <input type='hidden' name='command' value='update_user_by_id'/>
                 <input type='hidden' name='user_id' value='" . $user->getId() . "'/>
+                <input type='hidden' name='user_path' value='" . $user->getAvatarPath() . "'/>
                 <input type='submit' value='update write'/><br/><br/>
         </form>";
 

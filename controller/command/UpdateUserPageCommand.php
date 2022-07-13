@@ -19,7 +19,7 @@ class UpdateUserPageCommand implements Command
         $user->setCountry($_POST['user_country']);
         $user->setEmail($_POST['user_email']);
         $user->setId($_POST['user_id']);
-
+        $user->setAvatarPath($_POST['user_path']);
         HtmlPageWriter::writeUpdateUserHtmlForm($user);
     }
 

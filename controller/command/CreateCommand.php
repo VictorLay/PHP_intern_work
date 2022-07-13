@@ -3,6 +3,8 @@ require_once "./controller/Command.php";
 require_once "./bean/User.php";
 require_once "./service/factory/FactoryService.php";
 require_once "./util/permission/PermissionCtrl.php";
+require_once "./util/Router.php";
+require_once "./util/HtmlPageWriter.php";
 
 class CreateCommand implements Command
 {
@@ -17,8 +19,13 @@ class CreateCommand implements Command
         $user->setRole('user');
         $user->setAvatarPath("./resources/default_avatar.jpg");
 
-        FactoryService::getInstance()->getUserService()->create($user);
-        header("location:http://localhost/");
-        exit();
+        $userService = FactoryService::getInstance()->getUserService();
+
+        if ($userService->create($user)){
+            Router::redirect();
+        }else{
+            HtmlPageWriter::writeCreateUserHtmlForm();
+        }
+
     }
 }

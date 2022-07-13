@@ -8,14 +8,9 @@ interface UserService
 
     public function countUsers(): int;
 
-    /**
-     * @param User $user
-     * @return void
-     * @throws ServiceException
-     */
-    public function create(User $user): void;
+    public function create(User $user): bool;
 
-    public function update(User $user): void;
+    public function update(User $user): bool;
 
     public function showAll(): array;
 
