@@ -18,8 +18,7 @@ class SignOutCommand extends PermissionCtrl implements Command
                 unset($_SESSION['user']);
             }
         }
-        header('Location: http://localhost/');
-        exit();
+        Router::redirect();
     }
 
 }

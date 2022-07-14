@@ -5,6 +5,7 @@ require_once "./service/factory/FactoryService.php";
 require_once "./util/Router.php";
 require_once "./util/permission/PermissionCtrl.php";
 require_once "./resources/conf_const.php";
+require_once "./util/HtmlPageWriter.php";
 
 
 class DeleteUserByIdCommand extends PermissionCtrl implements Command
@@ -17,15 +18,14 @@ class DeleteUserByIdCommand extends PermissionCtrl implements Command
 
     public function execute(): void
     {
-        if ($this->checkUserPermission()){
+        if ($this->checkUserPermission() && $this->checkPostKeys(["user_id_for_deleting"])){
             $user = $_SESSION['user'];
             if ($user->getRole() == 'admin') {
                 FactoryService::getInstance()->getUserService()->delete($_POST["user_id_for_deleting"]);
-                header('Location: http://localhost/');
-                exit();
+                Router::redirect();
             }
         }else{
-            Router::redirect();
+            HtmlPageWriter::write404ErrorPage();
         }
     }
 }

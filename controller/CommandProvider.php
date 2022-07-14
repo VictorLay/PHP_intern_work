@@ -28,25 +28,25 @@ class CommandProvider
     {
         self::$logger = Logger::getLogger();
 
-        self::$command_array["create"] = new CreateCommand();
-        self::$command_array["create_page"] = new CreatePageCommand();
-        self::$command_array["create_new_admin_user"] = new CreateAdminCommand();
+        self::$command_array[CREATE_USER] = new CreateCommand();
+        self::$command_array[CREATE_USER_PAGE] = new CreatePageCommand();
+        self::$command_array["/new-admin"] = new CreateAdminCommand();
 
-        self::$command_array["show_all_users"] = new ReadAllCommand();
+        self::$command_array["404"] = new ReadAllCommand();
 
-        self::$command_array["update_user_by_id"] = new UpdateUserCommand();
-        self::$command_array["delete_user_by_id"] = new DeleteUserByIdCommand();
+        self::$command_array[UPDATE_USER] = new UpdateUserCommand();
+        self::$command_array[DELETE_USER] = new DeleteUserByIdCommand();
 
-        self::$command_array["update_user_by_id_page"] = new UpdateUserPageCommand();
-        self::$command_array["delete_user_by_id_page"] = new DeleteUserByIdPageCommand();
+        self::$command_array[UPDATE_USER_PAGE] = new UpdateUserPageCommand();
+        self::$command_array[DELETE_USER_PAGE] = new DeleteUserByIdPageCommand();
 
-        self::$command_array["sign_in_page"] = new SignInPageCommand();
-        self::$command_array["sign_in"] = new SignInCommand();
+        self::$command_array[LOGIN_PAGE] = new SignInPageCommand();
+        self::$command_array[LOGIN] = new SignInCommand();
 
-        self::$command_array["sign_out"] = new SignOutCommand();
-        self::$command_array["sign_out_page"] = new SignOutPageCommand();
+        self::$command_array[LOGOUT] = new SignOutCommand();
+        self::$command_array[LOGOUT_PAGE] = new SignOutPageCommand();
 
-        self::$command_array['default'] = new DefaultCommand();
+        self::$command_array[HOME_PAGE] = new DefaultCommand();
 
     }
 
@@ -55,14 +55,14 @@ class CommandProvider
         if (self::$notInit) {
             self::init();
         }
-        if (key_exists('last_command', $_SESSION)){
-            $_SESSION['previous_last_command'] = $_SESSION['last_command'];
+        $uri = strtolower($commandName);
+        if (preg_match("/\?/", $uri)) {
+            $uri = stristr($uri, "?", true);
         }
-        $_SESSION['last_command'] = $commandName;
-        self::$logger->log($commandName, DEBUG_LEVEL);
-        return array_key_exists($commandName, self::$command_array)? self::$command_array[$commandName] : self::$command_array['default'];
-    }
 
+        self::$logger->log($commandName, DEBUG_LEVEL);
+        return (array_key_exists($uri, self::$command_array)) ? self::$command_array[$uri] : self::$command_array['404'];
+    }
 
 
 }

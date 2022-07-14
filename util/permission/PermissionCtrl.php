@@ -45,6 +45,13 @@ class PermissionCtrl
             ADMIN => 1,
             default => null,
         };
+    }
 
+    public function checkPostKeys(array $arrayOfPostKeys):bool{
+        $isAllKeysExist = true;
+        foreach ($arrayOfPostKeys as $postKey) {
+            $isAllKeysExist &= key_exists($postKey, $_POST);
+        }
+        return $isAllKeysExist;
     }
 }

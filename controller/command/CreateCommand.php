@@ -17,7 +17,7 @@ class CreateCommand extends PermissionCtrl implements Command
 
     public function execute(): void
     {
-        if ($this->checkUserPermission()) {
+        if ($this->checkUserPermission() && $this->checkPostKeys(["user_email", "user_country", "user_name"])) {
             $user = new User();
 
             $user->setEmail($_POST["user_email"]);
@@ -34,7 +34,7 @@ class CreateCommand extends PermissionCtrl implements Command
                 HtmlPageWriter::writeCreateUserHtmlForm();
             }
         } else {
-            HtmlPageWriter::writeAccessDeniedHTML();
+            HtmlPageWriter::write404ErrorPage();
         }
     }
 }

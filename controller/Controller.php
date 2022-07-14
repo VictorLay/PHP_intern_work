@@ -32,14 +32,15 @@ class Controller
 
     private static function service(): void
     {
-        echo "<h2><a href='/'>HOME</a> </h2>";
+        $uri =$_SERVER['REQUEST_URI'];
         $commandName = array_key_exists('command', $_POST) ? $_POST['command'] : 'default';
-        $command = CommandProvider::getCommand($commandName);
+        $command = CommandProvider::getCommand($uri);
         $command->execute();
     }
 
     private static function destroy(): void
     {
         unset($_SESSION['not_valid_user_data']);
+        unset($_SESSION['validator_response']);
     }
 }

@@ -17,7 +17,7 @@ class CreatePageCommand extends PermissionCtrl implements Command
         if ($this->checkUserPermission()){
             HtmlPageWriter::writeCreateUserHtmlForm();
         }else{
-            HtmlPageWriter::writeAccessDeniedHTML();
+            HtmlPageWriter::write404ErrorPage();
         }
     }
 

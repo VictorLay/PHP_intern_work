@@ -13,12 +13,11 @@ class DeleteUserByIdPageCommand extends PermissionCtrl implements Command
 
     public function execute(): void
     {
-        if ($this->checkUserPermission()){
+        if ($this->checkUserPermission() && $this->checkPostKeys(["user_id"])){
             $deletingUserId = $_POST['user_id'];
             HtmlPageWriter::writeDeleteUserHtmlForm($deletingUserId);
-            Router::redirect();
         }else{
-            HtmlPageWriter::writeAccessDeniedHTML();
+            HtmlPageWriter::write404ErrorPage();
         }
     }
 }

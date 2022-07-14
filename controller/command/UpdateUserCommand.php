@@ -9,16 +9,20 @@ require_once "./resources/conf_const.php";
 class UpdateUserCommand extends PermissionCtrl implements Command
 {
     private Logger $logger;
+    private array $requiredPostKeys;
 
     public function __construct()
     {
         $this->logger = Logger::getLogger();
         $this->setAccessedRoles([ADMIN]);
+        $this->requiredPostKeys = [
+            "user_id", "user_email", "user_country", "user_name", "user_role"
+        ];
     }
 
     public function execute(): void
     {
-        if ($this->checkUserPermission()){
+        if ($this->checkUserPermission() && $this->checkPostKeys()){
 
             $newUser = new User();
 
@@ -37,7 +41,7 @@ class UpdateUserCommand extends PermissionCtrl implements Command
                 HtmlPageWriter::writeUpdateUserHtmlForm($newUser);
             }
         }else{
-            HtmlPageWriter::writeAccessDeniedHTML();
+            HtmlPageWriter::write404ErrorPage();
         }
     }
 
