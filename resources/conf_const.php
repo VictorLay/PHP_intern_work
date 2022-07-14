@@ -16,3 +16,4 @@ define("DELETE_USER_PAGE", "/delete");
 define("DELETE_USER", "/deletec");
 define("LOGIN_PAGE", "/login");
 define("LOGIN", "/loginc");
+define("PROFILE_PAGE", "/profile");

@@ -12,6 +12,7 @@ require_once "./controller/command/authorization/SignOutCommand.php";
 require_once "./controller/command/authorization/SignOutPageCommand.php";
 require_once "./controller/command/default/DefaultCommand.php";
 require_once "./controller/command/CreateAdminCommand.php";
+require_once "./controller/command/ProfilePageCommand.php";
 
 class CommandProvider
 {
@@ -47,6 +48,7 @@ class CommandProvider
         self::$command_array[LOGOUT_PAGE] = new SignOutPageCommand();
 
         self::$command_array[HOME_PAGE] = new DefaultCommand();
+        self::$command_array[PROFILE_PAGE] = new ProfilePageCommand();
 
     }
 

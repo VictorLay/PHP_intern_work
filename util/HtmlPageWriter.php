@@ -71,7 +71,7 @@ class HtmlPageWriter
         foreach ($users as $userInfo) {
             $usersWrite .= "<tr><td><img src='" . $userInfo->getAvatarPath() . "' width=30 height=30 ></td>";
             $usersWrite .= $userInfo;
-            $usersWrite .= "<td><form action='".UPDATE_USER_PAGE."' method='post'>
+            $usersWrite .= "<td><form action='" . UPDATE_USER_PAGE . "' method='post'>
 <input type='hidden' value='" . $userInfo->getName() . "' name='user_name'>
 <input type='hidden' value='" . $userInfo->getEmail() . "' name='user_email'>
 <input type='hidden' value='" . $userInfo->getCountry() . "' name='user_country'>
@@ -86,7 +86,7 @@ class HtmlPageWriter
                 /** @var User $signedUser */
                 $signedUser = $_SESSION['user'];
                 if ($userInfo->getId() != $signedUser->getId()) {
-                    $usersWrite .= "<td><form action='".DELETE_USER_PAGE."' method='post'>
+                    $usersWrite .= "<td><form action='" . DELETE_USER_PAGE . "' method='post'>
 <input type='hidden' value='" . $userInfo->getId() . "' name='user_id'>
 <input type='hidden' value='delete_user_by_id_page' name='command'>
 <input type='submit' value='delete'>
@@ -146,11 +146,11 @@ class HtmlPageWriter
             $_GET['page'] = 1;
         }
 
-        echo "<form action='".HOME_PAGE."' method='get'>";
+        echo "<form action='" . HOME_PAGE . "' method='get'>";
 
         echo "
-<a href='".HOME_PAGE."?page=1'>1</a> ...
-<a href='".HOME_PAGE."?page=" . $pageQuantity . "'>" . $pageQuantity . "</a>";
+<a href='" . HOME_PAGE . "?page=1'>1</a> ...
+<a href='" . HOME_PAGE . "?page=" . $pageQuantity . "'>" . $pageQuantity . "</a>";
 
         echo "
             <input type='text' name='page' placeholder='" . $_GET['page'] . "'/>
@@ -170,10 +170,7 @@ class HtmlPageWriter
             $usersWrite .= $userInfo . "</tr>";
         }
 
-        echo
-            "<!DOCTYPE html>
-                <html>
-                <head>
+        echo "<head>
                 
                 <!-- table -->
                 <style>
@@ -213,10 +210,26 @@ class HtmlPageWriter
                 </html>";
 
 
-        echo "<div>";
-        for ($i = 1; $i <= $pageQuantity; $i++)
-            echo "<a href='/?page=$i'>$i</a> ";
-        echo "</div>";
+//        echo "<div>";
+//        for ($i = 1; $i <= $pageQuantity; $i++)
+//            echo "<a href='/?page=$i'>$i</a> ";
+//        echo "</div>";
+
+        if (!key_exists('page', $_GET)) {
+            $_GET['page'] = 1;
+        }
+
+        echo "<form action='" . HOME_PAGE . "' method='get'>";
+
+        echo "
+<a href='" . HOME_PAGE . "?page=1'>1</a> ...
+<a href='" . HOME_PAGE . "?page=" . $pageQuantity . "'>" . $pageQuantity . "</a>";
+
+        echo "
+            <input type='text' name='page' placeholder='" . $_GET['page'] . "'/>
+            <input type='submit' value='перейти'/>
+</form>
+</body>";
 
 
     }
@@ -228,7 +241,7 @@ class HtmlPageWriter
             /** @var User $notValidUser */
             $notValidUser = $_SESSION["not_valid_user_data"];
             echo "<div>" . $_SESSION['validator_response'] . "</div>
-       <form action='".CREATE_USER."' method='post'><br/>
+       <form action='" . CREATE_USER . "' method='post'><br/>
             <input type='text' name='user_email' value='" . $notValidUser->getEmail() . "'/><br/>
             <input type='text' name='user_country' value='" . $notValidUser->getCountry() . "'/><br/>
             <input type='text' name='user_name' value='" . $notValidUser->getName() . "'/><br/>
@@ -239,7 +252,7 @@ class HtmlPageWriter
         ";
         } else {
             echo "
-       <form action='".CREATE_USER."' method='post'><br/>
+       <form action='" . CREATE_USER . "' method='post'><br/>
             <input type='text' name='user_email' placeholder='email'/><br/>
             <input type='text' name='user_country' placeholder='country'/><br/>
             <input type='text' name='user_name' placeholder='name'/><br/>
@@ -249,7 +262,7 @@ class HtmlPageWriter
         </form>";
         }
 
-        echo "<br><form action='".HOME_PAGE."' method='post'><input type='submit' value='cancel'></form>";
+        echo "<br><form action='" . HOME_PAGE . "' method='post'><input type='submit' value='cancel'></form>";
 
     }
 
@@ -261,21 +274,25 @@ class HtmlPageWriter
             echo "<div>" . $_SESSION['validator_response'] . "</div>";
         }
 
+        /** @var User $userFromSession */
+        $userFromSession =  $_SESSION['user'];
 
         echo "
-       <form action='".UPDATE_USER."' method='post' enctype='multipart/form-data'><br/>
+       <form action='" . UPDATE_USER . "' method='post' enctype='multipart/form-data'><br/>
             <input type='text' name='user_email' value='" . $user->getEmail() . "'/><br/>
             <input type='text' name='user_country' value='" . $user->getCountry() . "'/><br/>
             <input type='text' name='user_name' value='" . $user->getName() . "'/><br/>";
-        switch ($user->getRole()) {
-            case "admin":
-                echo "<input type='radio' name='user_role' value='admin' checked/>admin<br/>
+        if ($userFromSession->getRole() == "admin") {
+            switch ($user->getRole()) {
+                case "admin":
+                    echo "<input type='radio' name='user_role' value='admin' checked/>admin<br/>
                       <input type='radio' name='user_role'  value='user'  />user<br/>";
-                break;
-            case "user":
-                echo "  <input type='radio' name='user_role' value='admin' />admin<br/>
+                    break;
+                case "user":
+                    echo "  <input type='radio' name='user_role' value='admin' />admin<br/>
                         <input type='radio' name='user_role'  value='user' checked/>user<br/>";
-                break;
+                    break;
+            }
         }
         echo "<img src='" . $user->getAvatarPath() . "' width=70 height=70/>";
         echo "  
@@ -285,7 +302,7 @@ class HtmlPageWriter
                 <input type='hidden' name='user_path' value='" . $user->getAvatarPath() . "'/>
                 <input type='submit' value='update write'/><br/><br/>
         </form>";
-        echo "<br><form action='".HOME_PAGE."' method='post'><input type='submit' value='cancel'></form>";
+        echo "<br><form action='" . HOME_PAGE . "' method='post'><input type='submit' value='cancel'></form>";
 
 
     }
@@ -294,12 +311,12 @@ class HtmlPageWriter
     {
         var_dump($id);
         echo "
-       <form action='".DELETE_USER."' method='post'><br/>
+       <form action='" . DELETE_USER . "' method='post'><br/>
             <input type='hidden' name='user_id_for_deleting' value='" . $id . "'/><br/>
             <input type='submit' value='delete user'/><br/><br/>      
             <input type='hidden' name='command' value='delete_user_by_id'/> </form>
             
-       <form action='".HOME_PAGE."' method='post'><br/>
+       <form action='" . HOME_PAGE . "' method='post'><br/>
             <input type='submit' value='cancel'/><br/><br/>
             <input type='hidden' name='command' value='default'/>
      </form>
@@ -309,7 +326,7 @@ class HtmlPageWriter
     public static function writeSignInButton(): void
     {
         echo "
-       <form action='".LOGIN_PAGE."' method='post'><br/>
+       <form action='" . LOGIN_PAGE . "?page=1' method='post'><br/>
             <input type='submit' value='sign user'/><br/><br/>
             <input type='hidden' name='command' value='sign_in_page'/>
         </form>";
@@ -318,7 +335,7 @@ class HtmlPageWriter
     public static function writeCreateUserButton(): void
     {
         echo "
-        <form action='".CREATE_USER_PAGE."' method='post'>
+        <form action='" . CREATE_USER_PAGE . "' method='post'>
         
         <input type='hidden' name='command' value='create_page'/>
         <input type='submit' value='create User'/>
@@ -330,7 +347,7 @@ class HtmlPageWriter
     public static function writeSignInForm(): void
     {
         echo "
-       <form action='".LOGIN."' method='post'><br/>
+       <form action='" . LOGIN . "' method='post'><br/>
             <input type='text' name='mail' placeholder='mail'/><br/>
             <input type='text' name='password' placeholder='password'/><br/>
             <input type='submit' value='sign user'/><br/><br/>
@@ -341,7 +358,7 @@ class HtmlPageWriter
     public static function writeSignOutUserForm(): void
     {
         echo "
-       <form action='".LOGOUT_PAGE."' method='post'><br/>
+       <form action='" . LOGOUT_PAGE . "' method='post'><br/>
             <input type='submit' value='sign out user'/><br/><br/>
             <input type='hidden' name='command' value='sign_out_page'/>
         </form>";
@@ -355,11 +372,11 @@ class HtmlPageWriter
         <h3> You try to sign out. <br>" . $user->getName() . ", are you sure ?</h3><br/>
         your role is {" . $user->getRole() . "}
         <br/><br/>
-        <form action='".LOGOUT."' method='post'>
+        <form action='" . LOGOUT . "' method='post'>
         <input type='hidden' name='command' value='sign_out'><br/>
         <input type='submit' value='YES' >
         </form>
-        <form action='".HOME_PAGE."' method='post'>
+        <form action='" . HOME_PAGE . "' method='post'>
         <input type='hidden' name='command' value='default'><br/><br/>
         <input type='submit' value='NO' >
         </form>
@@ -405,4 +422,69 @@ class HtmlPageWriter
 </div>
 </body>';
     }
+
+
+    public static function writeUserProfile(User $user): void
+    {
+        $usersWrite = "<tr><td><img src='" . $user->getAvatarPath() . "' width=30 height=30 ></td>";
+        $usersWrite .= $user;
+
+        $usersWrite .= "<td><form action='" . UPDATE_USER_PAGE . "' method='post'>
+<input type='hidden' value='" . $user->getName() . "' name='user_name'>
+<input type='hidden' value='" . $user->getEmail() . "' name='user_email'>
+<input type='hidden' value='" . $user->getCountry() . "' name='user_country'>
+<input type='hidden' value='" . $user->getRole() . "' name='user_role'>
+<input type='hidden' value='" . $user->getId() . "' name='user_id'>
+<input type='hidden' value='update_user_by_id_page' name='command'>
+<input type='hidden' value='" . $user->getAvatarPath() . "' name='user_path'>
+<input type='submit' value='update'>
+</form></td></tr>";
+
+
+        echo "<head>
+                
+                <!-- table -->
+                <style>
+                table {
+                  font-family: arial, sans-serif;
+                  border-collapse: collapse;
+                  width: 100%;
+                }
+                
+                td, th {
+                  border: 1px solid #dddddd;
+                  text-align: left;
+                  padding: 8px;
+                }
+                
+                tr:nth-child(even) {
+                  background-color: #dddddd;
+                }
+                </style>
+                </head>
+                <body>
+                
+                    <h2>Profile</h2>
+                    
+                    <table>
+                      <tr>
+                        <th>avatar</th>
+                        <th>id</th>
+                        <th>email</th>
+                        <th>country</th>
+                        <th>name</th>
+                        <th>role</th>
+                        <th>Update</th>
+                      </tr>" . $usersWrite . "
+                    </table>
+                
+                </body>
+                </html>";
+
+    }
+
+    public static function writeProfileButton():void{
+        echo "<h2><a href='".PROFILE_PAGE."'>Your profile</a></h2>";
+    }
+
 }

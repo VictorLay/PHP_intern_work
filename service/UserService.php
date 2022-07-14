@@ -16,6 +16,8 @@ interface UserService
 
     public function showSeparately(int $page = 0): array;
 
+    public function findUser(int $userId): ?User;
+
     public function showUser(AuthorizationInfo $authorizationInfo): User;
 
     public function delete(int $userId): void;

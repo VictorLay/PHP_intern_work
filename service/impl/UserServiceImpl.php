@@ -53,7 +53,7 @@ class UserServiceImpl implements UserService
             $this->userDao->rollback();
             $_SESSION['not_valid_user_data'] = $user;
 
-            $this->logger->log("The new user wasn't been created. ".$exception, ERROR_LEVEL);
+            $this->logger->log("The new user wasn't been created. " . $exception, ERROR_LEVEL);
             $_SESSION['validator_response'] .= "Oupss... You couldn't to create user with such Email...";
             return false;
         }
@@ -90,8 +90,22 @@ class UserServiceImpl implements UserService
         return $this->userDao->read($authorizationInfo);
     }
 
+    public function findUser(int $userId): ?User
+    {
+        try {
+            return $this->userDao->readById($userId);
+        } catch (DaoException $exception) {
+            $this->logger->log($exception, DEBUG_LEVEL);
+            return null;
+        }
+    }
 
 
+    /**
+     * @param int $userId
+     * @return void
+     * @throws Exception
+     */
     public function delete(int $userId): void
     {
         /** @var User $user */

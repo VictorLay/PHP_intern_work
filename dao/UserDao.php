@@ -17,9 +17,20 @@ interface UserDao extends Transaction
 
     public function read(AuthorizationInfo $authorizationInfo): ?User;
 
+    /**
+     * @param User $newUser
+     * @return void
+     * @throws DaoException
+     */
     public function update(User $newUser): void;
 
     public function delete(int $id): void;
 
+    /**
+     * @param int $id
+     * @return User
+     * @throws DaoException
+     */
+    public function readById(int $id):User;
 
 }
