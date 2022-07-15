@@ -7,158 +7,67 @@ class HtmlPageWriter
 
     public static function writeUserInfo(User $user): void
     {
-        echo "<div>
-<h2>Hello " . $user->getName() . " from " . $user->getCountry() . "</h2>
-<h4>You have " . $user->getRole() . " permission</h4>
-</div>";
+        $userName = $user->getName();
+        $country = $user->getCountry();
+        $role = $user->getRole();
+        echo "  <div>
+                    <h2>Hello $userName from $country</h2>
+                    <h4>You have $role permission</h4>
+                </div>
+        ";
     }
 
-    public static function writeAllUsers(array $users): void
-    {
-        $usersWrite = "";
-        /** @var User $userInfo */
-        foreach ($users as $userInfo) {
-            $usersWrite .= "<tr>" . $userInfo . "</tr>";
-        }
-        echo
-            "<!DOCTYPE html>
-                <html>
-                <head>
-                
-                <!-- table -->
-                <style>
-                table {
-                  font-family: arial, sans-serif;
-                  border-collapse: collapse;
-                  width: 100%;
-                }
-                
-                td, th {
-                  border: 1px solid #dddddd;
-                  text-align: left;
-                  padding: 8px;
-                }
-                
-                tr:nth-child(even) {
-                  background-color: #dddddd;
-                }
-                </style>
-                </head>
-                <body>
-                
-                    <h2>HTML Table</h2>
-                    
-                    <table>
-                      <tr>
-                        <th>id</th>
-                        <th>email</th>
-                        <th>country</th>
-                        <th>name</th>
-                        <th>role</th>
-                      </tr>" . $usersWrite . "
-                    </table>
-                
-                </body>
-                </html>";
-    }
 
-    public static function writeAllUsersForAdmin(array $users, int $pageQuantity): void
+    public static function writeAllUsersForAdmin(array $users, int $pageQuantity, User $userFromSession): void
     {
 
-
-        $usersWrite = "";
-        /** @var User $userInfo */
-        foreach ($users as $userInfo) {
-            $usersWrite .= "<tr><td><img src='" . $userInfo->getAvatarPath() . "' width=30 height=30 ></td>";
-            $usersWrite .= $userInfo;
-            $usersWrite .= "<td><form action='" . UPDATE_USER_PAGE . "' method='post'>
-<input type='hidden' value='" . $userInfo->getName() . "' name='user_name'>
-<input type='hidden' value='" . $userInfo->getEmail() . "' name='user_email'>
-<input type='hidden' value='" . $userInfo->getCountry() . "' name='user_country'>
-<input type='hidden' value='" . $userInfo->getRole() . "' name='user_role'>
-<input type='hidden' value='" . $userInfo->getId() . "' name='user_id'>
-<input type='hidden' value='update_user_by_id_page' name='command'>
-<input type='hidden' value='" . $userInfo->getAvatarPath() . "' name='user_path'>
-<input type='submit' value='update'>
-</form></td>";
-
-            if (key_exists("user", $_SESSION)) {
-                /** @var User $signedUser */
-                $signedUser = $_SESSION['user'];
-                if ($userInfo->getId() != $signedUser->getId()) {
-                    $usersWrite .= "<td><form action='" . DELETE_USER_PAGE . "' method='post'>
-<input type='hidden' value='" . $userInfo->getId() . "' name='user_id'>
-<input type='hidden' value='delete_user_by_id_page' name='command'>
-<input type='submit' value='delete'>
-</form></td></tr>";
-                }
-
-            }
-        }
+        $HOME_PAGE = HOME_PAGE;
+        $FIRST_PAGE = 1;
+        $page = key_exists('page', $_GET) ? $_GET['page'] : $FIRST_PAGE;
+        $usersWrite = self::prepareUserRowsForAdminTable($users, $userFromSession);
 
         echo
-            "<head>
-                
-                <!-- table -->
+        "<head>
                 <style>
-                table {
-                  font-family: arial, sans-serif;
-                  border-collapse: collapse;
-                  width: 100%;
-                }
-                
-                td, th {
-                  border: 1px solid #dddddd;
-                  text-align: left;
-                  padding: 8px;
-                }
-                
-                tr:nth-child(even) {
-                  background-color: #dddddd;
-                }
-                </style>
-                </head>
-                <body>
-                
-                    <h2>HTML Table</h2>
+                    table {
+                      font-family: arial, sans-serif;
+                      border-collapse: collapse;
+                      width: 100%;
+                    }
                     
-                    <table>
-                      <tr>
-                      <th>avatar</th>
-                        <th>id</th>
-                        <th>email</th>
-                        <th>country</th>
-                        <th>name</th>
-                        <th>role</th>
-                        <th>update</th>
-                        <th>delete</th>
-                      </tr>" . $usersWrite . "
-                    </table>";
-
-
-//        echo "<div>";
-//        for ($i = 1; $i <= $pageQuantity; $i++)
-//            echo "<a href='/?page=$i'>$i</a> ";
-//        echo "</div>";
-
-
-        if (!key_exists('page', $_GET)) {
-            $_GET['page'] = 1;
-        }
-
-        echo "<form action='" . HOME_PAGE . "' method='get'>";
-
-        echo "
-<a href='" . HOME_PAGE . "?page=1'>1</a> ...
-<a href='" . HOME_PAGE . "?page=" . $pageQuantity . "'>" . $pageQuantity . "</a>";
-
-        echo "
-            <input type='text' name='page' placeholder='" . $_GET['page'] . "'/>
-            <input type='submit' value='перейти'/>
-</form>
-</body>";
-
-
+                    td, th {
+                      border: 1px solid #dddddd;
+                      text-align: left;
+                      padding: 8px;
+                    }
+                    
+                    tr:nth-child(even) {
+                      background-color: #dddddd;
+                    }
+                </style>
+            </head>
+            <body>
+                <h2>HTML Table</h2>
+                <table>
+                  <tr>
+                    <th>avatar</th>
+                    <th>id</th>
+                    <th>email</th>
+                    <th>country</th>
+                    <th>name</th>
+                    <th>role</th>
+                    <th>update</th>
+                    <th>delete</th>
+                  </tr>
+                  $usersWrite
+                </table>
+                <form action='$HOME_PAGE' method='get'>
+                    <a href='$HOME_PAGE?page=1'>1</a> ...
+                    <a href='$HOME_PAGE?page=$pageQuantity'>$pageQuantity</a>
+                    <input type='text' name='page' placeholder='$page'/>
+                    <input type='submit' value='перейти'/>
+                </form>
+            </body>";
     }
 
     public static function writeAllUsersForUser(array $users, int $pageQuantity): void
@@ -166,7 +75,8 @@ class HtmlPageWriter
         $usersWrite = "";
         /** @var User $userInfo */
         foreach ($users as $userInfo) {
-            $usersWrite .= "<tr><td><img src='" . $userInfo->getAvatarPath() . "' width=30 height=30 ></td>";
+            $usersWrite .= "<tr>";
+//                <td><img src='" . $userInfo->getAvatarPath() . "' width=30 height=30 ></td>";
             $usersWrite .= $userInfo . "</tr>";
         }
 
@@ -197,12 +107,13 @@ class HtmlPageWriter
                     
                     <table>
                       <tr>
+                       
+                        <th>avatar</th>
                         <th>id</th>
                         <th>email</th>
                         <th>country</th>
                         <th>name</th>
                         <th>role</th>
-                        <th>avatar</th>
                       </tr>" . $usersWrite . "
                     </table>
                 
@@ -266,69 +177,87 @@ class HtmlPageWriter
 
     }
 
-    public static function writeUpdateUserHtmlForm(User $user): void
+    public static function writeUpdateUserHtmlForm(User $user, User $userFromSession): void
     {
-        if (key_exists("not_valid_user_data", $_SESSION)) {
-            /** @var User $notValidUser */
-//            $notValidUser = $_SESSION["not_valid_user_data"];
-            echo "<div>" . $_SESSION['validator_response'] . "</div>";
-        }
+        $UPDATE_USER_PAGE = UPDATE_USER_PAGE;
+        $HOME_PAGE = HOME_PAGE;
 
-        /** @var User $userFromSession */
-        $userFromSession =  $_SESSION['user'];
+        $userName = $user->getName();
+        $userCountry = $user->getCountry();
+        $userEmail = $user->getEmail();
+        $userAvatarPath = $user->getAvatarPath();
+        $userId = $user->getId();
+        $roleRadioSelector = '';
+        $imageInput = '';
 
-        echo "
-       <form action='" . UPDATE_USER . "' method='post' enctype='multipart/form-data'><br/>
-            <input type='text' name='user_email' value='" . $user->getEmail() . "'/><br/>
-            <input type='text' name='user_country' value='" . $user->getCountry() . "'/><br/>
-            <input type='text' name='user_name' value='" . $user->getName() . "'/><br/>";
-        if ($userFromSession->getRole() == "admin") {
+
+        if ($userFromSession->getRole() == ADMIN) {
             switch ($user->getRole()) {
-                case "admin":
-                    echo "<input type='radio' name='user_role' value='admin' checked/>admin<br/>
-                      <input type='radio' name='user_role'  value='user'  />user<br/>";
+                case ADMIN:
+                    $roleRadioSelector .= "
+                        <input type='radio' name='user_role' value='admin' checked/>admin<br/>
+                        <input type='radio' name='user_role'  value='user'  />user<br/>";
                     break;
-                case "user":
-                    echo "  <input type='radio' name='user_role' value='admin' />admin<br/>
+                case USER:
+                    $roleRadioSelector .= "  
+                        <input type='radio' name='user_role' value='admin' />admin<br/>
                         <input type='radio' name='user_role'  value='user' checked/>user<br/>";
                     break;
             }
         }
-        echo "<img src='" . $user->getAvatarPath() . "' width=70 height=70/>";
-        echo "  
-                <input name='picture' type='file' />
-                <input type='hidden' name='command' value='update_user_by_id'/>
-                <input type='hidden' name='user_id' value='" . $user->getId() . "'/>
-                <input type='hidden' name='user_path' value='" . $user->getAvatarPath() . "'/>
-                <input type='submit' value='update write'/><br/><br/>
-        </form>";
-        echo "<br><form action='" . HOME_PAGE . "' method='post'><input type='submit' value='cancel'></form>";
+        if ($userId == $userFromSession->getId()) {
+            $imageInput = "<input type='file' name='picture' accept='image/*'/>";
+        }
+
+
+        echo "
+                <form action='$UPDATE_USER_PAGE' method='post' enctype='multipart/form-data'><br/>
+                    <input type='text' name='user_email' value='$userEmail'/><br/>
+                    <input type='text' name='user_country' value='$userCountry'/><br/>
+                    <input type='text' name='user_name' value='$userName'/><br/>
+                    <input type='hidden' name='user_id' value='$userId'/><br/>
+
+                    $roleRadioSelector
+                    <img src='$userAvatarPath' width=70 height=70/>
+                    $imageInput
+                    <input type='submit' value='update write'/><br/>
+                </form><br/>
+                <form action='$HOME_PAGE' method='post'>
+                    <input type='submit' value='cancel'/>
+                </form>";
 
 
     }
 
+    public static function writeUpdateUserHtmlFormWithWarning(User $user, User $userFromSession): void
+    {
+
+        if (key_exists("not_valid_user_data", $_SESSION)) {
+            /** @var User $notValidUser */
+            echo "<div>" . $_SESSION['validator_response'] . "</div>";
+        }
+        self::writeUpdateUserHtmlForm($user, $userFromSession);
+    }
+
     public static function writeDeleteUserHtmlForm(int $id): void
     {
-        var_dump($id);
-        echo "
-       <form action='" . DELETE_USER . "' method='post'><br/>
-            <input type='hidden' name='user_id_for_deleting' value='" . $id . "'/><br/>
+        $DELETE_USER = DELETE_USER;
+        $HOME_PAGE = HOME_PAGE;
+        echo "<h2>Do you want to delete user with id $id</h2>
+       <form action='$DELETE_USER' method='post'><br/>
+            <input type='hidden' name='user_id_for_deleting' value='$id'/><br/>
             <input type='submit' value='delete user'/><br/><br/>      
-            <input type='hidden' name='command' value='delete_user_by_id'/> </form>
-            
-       <form action='" . HOME_PAGE . "' method='post'><br/>
+       </form>
+       <form action='$HOME_PAGE' method='post'><br/>
             <input type='submit' value='cancel'/><br/><br/>
-            <input type='hidden' name='command' value='default'/>
-     </form>
-            ";
+       </form>";
     }
 
     public static function writeSignInButton(): void
     {
         echo "
-       <form action='" . LOGIN_PAGE . "?page=1' method='post'><br/>
+       <form action='" . LOGIN_PAGE . "' method='post'><br/>
             <input type='submit' value='sign user'/><br/><br/>
-            <input type='hidden' name='command' value='sign_in_page'/>
         </form>";
     }
 
@@ -344,11 +273,13 @@ class HtmlPageWriter
         ";
     }
 
-    public static function writeSignInForm(): void
+    public static function writeSignInForm(?string $userEmail): void
     {
+        $loginWarning = is_null($userEmail) ? '' : "<div>Incorrect login or password</div>";
         echo "
-       <form action='" . LOGIN . "' method='post'><br/>
-            <input type='text' name='mail' placeholder='mail'/><br/>
+        $loginWarning
+        <form action='" . LOGIN_PAGE . "' method='post'><br/>
+            <input type='text' name='mail' placeholder='mail' value='$userEmail'/><br/>
             <input type='text' name='password' placeholder='password'/><br/>
             <input type='submit' value='sign user'/><br/><br/>
             <input type='hidden' name='command' value='sign_in'/>
@@ -416,7 +347,6 @@ class HtmlPageWriter
     <h2>Мы не можем найти страницу, которую вы ищете.</h2>
     <h4>Страница, которую вы запросили, не найдена в базе данных.<br> Скорее всего вы попали на битую ссылку или опечатались при вводе URL</h4>
     <p class="box_in"><a href="/home">Перейти на главную страницу</a></p>
-    <!--<img src="https://thumbs.dreamstime.com/b/%D0%B1%D0%B5%D0%BB%D1%8B%D0%B9-%D1%87%D0%B5%D0%BB%D0%BE%D0%B2%D0%B5%D0%BA-d-%D0%B8-%D0%BE%D1%88%D0%B8%D0%B1%D0%BA%D0%B0-%D0%B2%D1%8B%D0%B7%D1%8B%D0%B2%D0%B0%D1%8E%D1%82-%D0%BD%D0%B5-%D0%BD%D0%B0%D0%B9%D0%B4%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9-106883272.jpg" width=1080 height=500>
  -->   <img src="http://localhost/resources/404.jpg" width=1080 height=500>
     <p>please don\'t fire the developer. © 2022</p>
 </div>
@@ -426,24 +356,19 @@ class HtmlPageWriter
 
     public static function writeUserProfile(User $user): void
     {
-        $usersWrite = "<tr><td><img src='" . $user->getAvatarPath() . "' width=30 height=30 ></td>";
-        $usersWrite .= $user;
+        $HOME_PAGE = HOME_PAGE;
+        $UPDATE_USER_PAGE = UPDATE_USER_PAGE;
+        $userId = $user->getId();
 
-        $usersWrite .= "<td><form action='" . UPDATE_USER_PAGE . "' method='post'>
-<input type='hidden' value='" . $user->getName() . "' name='user_name'>
-<input type='hidden' value='" . $user->getEmail() . "' name='user_email'>
-<input type='hidden' value='" . $user->getCountry() . "' name='user_country'>
-<input type='hidden' value='" . $user->getRole() . "' name='user_role'>
-<input type='hidden' value='" . $user->getId() . "' name='user_id'>
-<input type='hidden' value='update_user_by_id_page' name='command'>
-<input type='hidden' value='" . $user->getAvatarPath() . "' name='user_path'>
-<input type='submit' value='update'>
-</form></td></tr>";
-
-
+        $userWrite = strval($user);
+        $userWrite .= "<td>
+                         <form action='$UPDATE_USER_PAGE' method='post'>
+                           <input type='hidden' value='$userId' name='user_id'>
+                           <input type='submit' value='update'>
+                         </form>
+                       </td>";
         echo "<head>
                 
-                <!-- table -->
                 <style>
                 table {
                   font-family: arial, sans-serif;
@@ -465,7 +390,7 @@ class HtmlPageWriter
                 <body>
                 
                     <h2>Profile</h2>
-                    
+                    <a href='$HOME_PAGE'>HOME</a>
                     <table>
                       <tr>
                         <th>avatar</th>
@@ -475,16 +400,55 @@ class HtmlPageWriter
                         <th>name</th>
                         <th>role</th>
                         <th>Update</th>
-                      </tr>" . $usersWrite . "
+                      </tr>
+                      <tr>
+                        $userWrite 
+                      </tr>  
                     </table>
-                
-                </body>
-                </html>";
-
+                </body>";
     }
 
-    public static function writeProfileButton():void{
-        echo "<h2><a href='".PROFILE_PAGE."'>Your profile</a></h2>";
+    public static function writeProfileButton(): void
+    {
+        echo "<h2><a href='" . PROFILE_PAGE . "'>Your profile</a></h2>";
     }
 
+
+    private static function prepareUserRowsForAdminTable(array $users, User $userFromSession): string
+    {
+        $UPDATE_USER_PAGE = UPDATE_USER_PAGE;
+        $DELETE_USER_PAGE = DELETE_USER_PAGE;
+        $usersWrite = "";
+        /** @var User $user */
+        foreach ($users as $user) {
+            $userRole = $user->getRole();
+            $userId = $user->getId();
+            $userAvatarPath = $user->getAvatarPath();
+            $usersWrite .= $user;
+            if ($userRole != ADMIN || $userFromSession->getId() == $userId) {
+                $usersWrite .= "<td>
+                                    <form action='$UPDATE_USER_PAGE' method='post'>
+                                        <input type='hidden' value='$userId' name='user_id'>
+                                        <input type='hidden' value='$userAvatarPath' name='user_path'>
+                                        <input type='submit' value='update'>
+                                    </form>
+                                </td>";
+            } else {
+                $usersWrite .= "<td></td>";
+            }
+
+            if ($userId != $userFromSession->getId() && $userRole != ADMIN) {
+                $usersWrite .= "<td>
+                                        <form action='$DELETE_USER_PAGE' method='post'>
+                                            <input type='hidden' value='$userId' name='user_id'>
+                                            <input type='submit' value='delete'>
+                                        </form>
+                                    </td>
+                                </tr>";
+            } else {
+                $usersWrite .= "<td></td></tr>";
+            }
+        }
+        return $usersWrite;
+    }
 }

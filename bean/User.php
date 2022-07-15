@@ -116,7 +116,9 @@ class User extends Entity
 
     public function __toString()
     {
-        return "<td>" . $this->id . "</td>" .
+        return
+            "<td><img src='" . $this->avatar_path . "' width=30 height=30 ></td>".
+            "<td>" . $this->id . "</td>" .
             "<td>" . $this->email . "</td>" .
             "<td>" . $this->country . "</td>" .
             "<td>" . $this->name . "</td>".

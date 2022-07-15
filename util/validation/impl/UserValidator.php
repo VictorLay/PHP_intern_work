@@ -27,9 +27,8 @@ class UserValidator implements EntityValidator
         $logger->log( '$isValidName = '.$isValidName.'$isValidRole = '.$isValidRole.'$isValidCountry = '.$isValidCountry.'$isValidEmail = '.$isValidEmail,DEBUG_LEVEL);
         $logger->log("isValidPath = ".$isValidPath, DEBUG_LEVEL);
         $validationResponse = ($isValidName?'':"The name '$name' isn't valid.<br>").
-            ($isValidCountry?'':"The name '$country' isn't valid.<br>").
-            ($isValidEmail?'':"The name '$email' isn't valid.<br>").
-            ($isValidEmail?'':"The name '$email' isn't valid.<br>");
+            ($isValidCountry?'':"The country '$country' isn't valid.<br>").
+            ($isValidEmail?'':"The email '$email' isn't valid.<br>");
 
         $_SESSION['validator_response'] = $validationResponse;
         $logger->log("$validationResponse" ,DEBUG_LEVEL);

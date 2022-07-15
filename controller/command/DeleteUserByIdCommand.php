@@ -18,7 +18,7 @@ class DeleteUserByIdCommand extends PermissionCtrl implements Command
 
     public function execute(): void
     {
-        if ($this->checkUserPermission() && $this->checkPostKeys(["user_id_for_deleting"])){
+        if ( $this->checkPostKeys(["user_id_for_deleting"]) && $this->checkUserPermission() ){
             $user = $_SESSION['user'];
             if ($user->getRole() == 'admin') {
                 FactoryService::getInstance()->getUserService()->delete($_POST["user_id_for_deleting"]);

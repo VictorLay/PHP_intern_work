@@ -6,11 +6,13 @@ class PermissionCtrl
 {
     //todo replace with enum
     private array $accessedRoles;
+    private int $userIdWithAccess;
 
 
     public function __construct()
     {
         $this->accessedRoles = array();
+        $this->userIdWithAccess = -1;
     }
 
 
@@ -22,16 +24,45 @@ class PermissionCtrl
         $this->accessedRoles = $accessedRoles;
     }
 
+//    /**
+//     * @param int $userIdWithAccess
+//     */
+//    public function setUserWithAccess(User $userWithAccess): bool
+//    {
+//        $userId = $userWithAccess->getId();
+//        $this->userIdWithAccess = $userId;
+//        return $this->userIdWithAccess > 0;
+//    }
 
-    protected function checkUserPermission(string $userIndexInTheSession = 'user'):bool{
-        if (key_exists($userIndexInTheSession, $_SESSION)){
-            /** @var User $user */
-            $user = $_SESSION["$userIndexInTheSession"];
-            $userRole = $user->getRole();
-            /** @var string $role */
-            foreach ($this->accessedRoles as $role){
-                if ($userRole == $role){
-                    return true;
+
+    protected function checkUserPermission(bool $setAccessWithId = false, string $userIndexInTheSession = 'user'): bool
+    {
+
+        if ($setAccessWithId) {
+            if (key_exists($userIndexInTheSession, $_SESSION)) {
+                /** @var User $user */
+                $user = $_SESSION["$userIndexInTheSession"];
+                $userId = $user->getId();
+                $userRole = $user->getRole();
+                /** @var string $role */
+                foreach ($this->accessedRoles as $role) {
+                    if ($userRole == $role) {
+                        return true;
+                    }
+                }
+                return $userId == $_POST['user_id'];
+//                return $userId == $this->userIdWithAccess;
+            }
+        } else {
+            if (key_exists($userIndexInTheSession, $_SESSION)) {
+                /** @var User $user */
+                $user = $_SESSION["$userIndexInTheSession"];
+                $userRole = $user->getRole();
+                /** @var string $role */
+                foreach ($this->accessedRoles as $role) {
+                    if ($userRole == $role) {
+                        return true;
+                    }
                 }
             }
         }
@@ -47,7 +78,8 @@ class PermissionCtrl
         };
     }
 
-    public function checkPostKeys(array $arrayOfPostKeys):bool{
+    public function checkPostKeys(array $arrayOfPostKeys): bool
+    {
         $isAllKeysExist = true;
         foreach ($arrayOfPostKeys as $postKey) {
             $isAllKeysExist &= key_exists($postKey, $_POST);

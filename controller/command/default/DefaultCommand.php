@@ -11,7 +11,7 @@ class DefaultCommand extends PermissionCtrl implements Command
 
     public function __construct()
     {
-        $this->setAccessedRoles(["admin"]);
+        $this->setAccessedRoles([ADMIN]);
         $this->logger = Logger::getLogger();
     }
 
@@ -19,31 +19,31 @@ class DefaultCommand extends PermissionCtrl implements Command
     {
 
         if (isset($_SESSION['user'])) {
+            $userFromSession = $_SESSION['user'];
 
-            HtmlPageWriter::writeUserInfo($_SESSION['user']);
+            HtmlPageWriter::writeUserInfo($userFromSession);
             HtmlPageWriter::writeSignOutUserForm();
+            HtmlPageWriter::writeProfileButton();
 
             $userService = FactoryService::getInstance()->getUserService();
             $pageQuantity = ceil($userService->countUsers() / NUM_OF_USERS_ON_ONE_PAGE);
-
             $page = min(key_exists('page', $_GET) ? $_GET['page'] : 1, $pageQuantity);
-            if ($page < 1)
+            if ($page < 1) {
                 $page = 1;
+            }
 
             $arrayOfUsers = $userService->showSeparately($page);
-
-            /** @var User $user */
-            $user = $_SESSION['user'];
-            if ($user->getRole() == "admin") {
-                $this->logger->log("The admin visit Home page",INFO_LEVEL);
+            /** @var User $userFromSession */
+            if ($userFromSession->getRole() == "admin") {
+                $this->logger->log("The admin visit Home page", INFO_LEVEL);
                 HtmlPageWriter::writeCreateUserButton();
-                HtmlPageWriter::writeAllUsersForAdmin($arrayOfUsers, $pageQuantity);
+                HtmlPageWriter::writeAllUsersForAdmin($arrayOfUsers, $pageQuantity, $userFromSession);
             } else {
-                $this->logger->log("The user visit Home page",INFO_LEVEL);
+                $this->logger->log("The user visit Home page", INFO_LEVEL);
                 HtmlPageWriter::writeAllUsersForUser($arrayOfUsers, $pageQuantity);
             }
         } else {
-            $this->logger->log("The unknown user visit Home page",INFO_LEVEL);
+            $this->logger->log("The unknown user visit Home page", INFO_LEVEL);
             HtmlPageWriter::writeSignInButton();
         }
     }

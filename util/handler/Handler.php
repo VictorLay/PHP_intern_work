@@ -39,7 +39,7 @@ class Handler
 
         } catch (Exception | RuntimeException $exception) {
             self::$logger->log($exception, FATAL_LEVEL);
-            Router::redirect("error_pages/incorrect_data.html");
+            Router::redirect("/error_pages/incorrect_data.html");
         }
     }
 

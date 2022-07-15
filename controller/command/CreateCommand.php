@@ -17,7 +17,7 @@ class CreateCommand extends PermissionCtrl implements Command
 
     public function execute(): void
     {
-        if ($this->checkUserPermission() && $this->checkPostKeys(["user_email", "user_country", "user_name"])) {
+        if ($this->checkPostKeys(["user_email", "user_country", "user_name"]) && $this->checkUserPermission()) {
             $user = new User();
 
             $user->setEmail($_POST["user_email"]);

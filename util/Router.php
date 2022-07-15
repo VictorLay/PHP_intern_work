@@ -11,15 +11,19 @@ class Router
      * it will give an error.
      */
     //todo how to fix it?
-    #[NoReturn] public static function redirect(string $path = ""): void
+    #[NoReturn] public static function redirect(string $path = "/home"): void
     {
-//        if (key_exists("command", $_POST)) {
-//            $_SESSION['back_page'] = $_POST['command'];
-//        }
-        header("Location: http://localhost/" . $path);
+        header("Location: http://localhost" . $path);
         exit();
     }
-// public static function red(string $path):RedirectResponse{
-//     return new RedirectResponse($url);
-// }
+
+    #[NoReturn] public static function innerRedirect(string $path):void{
+        header("Status: 200 OK");
+
+        $dir =dirname($_SERVER['SCRIPT_NAME']);
+
+        header("Location: $dir/$path");
+        exit();
+    }
+
 }

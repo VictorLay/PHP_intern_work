@@ -1,5 +1,5 @@
 <?php
-define("NUM_OF_USERS_ON_ONE_PAGE", 10);
+define("NUM_OF_USERS_ON_ONE_PAGE", 5);
 
 // roles
 define("ADMIN", "admin");
@@ -17,3 +17,6 @@ define("DELETE_USER", "/deletec");
 define("LOGIN_PAGE", "/login");
 define("LOGIN", "/loginc");
 define("PROFILE_PAGE", "/profile");
+
+// loggers
+define("CONTROLLER", "controller");
