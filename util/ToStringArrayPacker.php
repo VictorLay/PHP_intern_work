@@ -13,6 +13,5 @@ class ToStringArrayPacker
             "user_avatar_path" => $user->getAvatarPath(),
             "user_role" => $user->getRole()
         ];
-
     }
 }

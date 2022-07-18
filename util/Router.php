@@ -11,7 +11,7 @@ class Router
      * it will give an error.
      */
     //todo how to fix it?
-    #[NoReturn] public static function redirect(string $path = "/home"): void
+    #[NoReturn] public static function redirect(string $path = HOME_PAGE): void
     {
         header("Location: http://localhost" . $path);
         exit();

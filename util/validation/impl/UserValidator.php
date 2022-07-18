@@ -24,11 +24,12 @@ class UserValidator implements EntityValidator
         $isValidPath = self::isValidPath($path);
 
         $logger = Logger::getLogger();
-        $logger->log( '$isValidName = '.$isValidName.'$isValidRole = '.$isValidRole.'$isValidCountry = '.$isValidCountry.'$isValidEmail = '.$isValidEmail,DEBUG_LEVEL);
+        $logger->log( '$isValidName = '.$isValidName.'$isValidRole = '.$isValidRole.'$isValidCountry = '.$isValidCountry.'$isValidEmail = '.$isValidEmail.'$isValidPath = '.$isValidPath,DEBUG_LEVEL);
         $logger->log("isValidPath = ".$isValidPath, DEBUG_LEVEL);
         $validationResponse = ($isValidName?'':"The name '$name' isn't valid.<br>").
             ($isValidCountry?'':"The country '$country' isn't valid.<br>").
-            ($isValidEmail?'':"The email '$email' isn't valid.<br>");
+            ($isValidEmail?'':"The email '$email' isn't valid.<br>").
+            ($isValidPath?'':"The email '$path' isn't valid.<br>");
 
         $_SESSION['validator_response'] = $validationResponse;
         $logger->log("$validationResponse" ,DEBUG_LEVEL);
@@ -61,7 +62,8 @@ class UserValidator implements EntityValidator
         $logger->log("path $isValid", DEBUG_LEVEL);
         $isValid &= preg_match("/.{1,45}/", $field);
         $logger->log("path $isValid", DEBUG_LEVEL);
-        $isValid &= preg_match("/^\.\/resources\/\w+\.(jpg|png|jpeg)$/", $field);
+//        $isValid &= preg_match("/^\.\/resources\/\w+\.(jpg|png|jpeg)$/", $field);
+        $isValid &= preg_match("/\.(jpg|png|jpeg)$/", $field);
         $logger->log("path $isValid", DEBUG_LEVEL);
 
         return $isValid;

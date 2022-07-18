@@ -40,11 +40,25 @@ class Controller
 
     private static function service(): void
     {
+        $logger = Logger::getLogger("controller");
         $uri =$_SERVER['REQUEST_URI'];
-//        $commandName = array_key_exists('command', $_POST) ? $_POST['command'] : 'default';
+        $logger->log($uri, DEBUG_LEVEL);
+        if (preg_match("/\?/", $uri)) {
+            $uri = stristr($uri, "?", true);
+        }
         $command = CommandProvider::getCommand($uri);
+//        var_dump($command);
         $command->execute();
     }
+
+//$uri = $_SERVER['REQUEST_URI'];
+//$parseUri = explode('/', $uri);
+//if(count($parseUri) == 2 and $parseUri[1] == 'users') {
+//echo 'Отображаем список юзеров';
+//} elseif (count($parseUri)==3) {
+//  echo "Отображаем страницу юзера {$parseUri[2]}";
+//}
+//exit();
 
     private static function destroy(): void
     {

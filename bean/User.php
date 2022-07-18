@@ -3,7 +3,6 @@ require_once "./bean/Entity.php";
 
 class User extends Entity
 {
-    private int $id;
     private string $email;
     private string $name;
     private string $country;
@@ -32,21 +31,21 @@ class User extends Entity
     }
 
 
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
+//    /**
+//     * @return int
+//     */
+//    public function getId(): int
+//    {
+//        return $this->id;
+//    }
+//
+//    /**
+//     * @param int $id
+//     */
+//    public function setId(int $id): void
+//    {
+//        $this->id = $id;
+//    }
 
     /**
      * @return string
@@ -117,7 +116,7 @@ class User extends Entity
     public function __toString()
     {
         return
-            "<td><img src='" . $this->avatar_path . "' width=30 height=30 ></td>".
+            "<td><img src=".stristr($this->avatar_path,"/")." width='70' height='70' ></td>".
             "<td>" . $this->id . "</td>" .
             "<td>" . $this->email . "</td>" .
             "<td>" . $this->country . "</td>" .
