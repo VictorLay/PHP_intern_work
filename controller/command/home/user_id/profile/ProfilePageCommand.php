@@ -1,4 +1,5 @@
 <?php
+
 require_once "./util/permission/PermissionCtrl.php";
 require_once "./controller/Command.php";
 require_once "./resources/conf_const.php";
@@ -18,16 +19,16 @@ class ProfilePageCommand extends PermissionCtrl implements Command
 
     public function execute(): void
     {
-        if ($this->checkUserPermission()){
+        if ($this->checkUserPermission()) {
             /** @var User $userFromSession */
             $userFromSession = $_SESSION['user'];
 
             $userService = FactoryService::getInstance()->getUserService();
             $user = $userService->findUser($userFromSession->getId());
             $_SESSION['user'] = $user;
-            HtmlPageWriter::writeUserProfile($user);
+            HtmlPageWriter::writeSignedUserProfile($user, $userFromSession);
 
-        }else{
+        } else {
             HtmlPageWriter::write404ErrorPage();
         }
 

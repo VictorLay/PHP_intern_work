@@ -1,24 +1,21 @@
 <?php
 require_once "./controller/Command.php";
-require_once "./util/logger/Logger.php";
-require_once "./resources/conf_const.php";
 require_once "./util/permission/PermissionCtrl.php";
+require_once "bean/User.php";
 
-
-class DefaultCommand extends PermissionCtrl implements Command
+class ShowAllUsersPageCommand extends PermissionCtrl implements Command
 {
-    private Logger $logger;
 
     public function __construct()
     {
-        $this->setAccessedRoles([ADMIN]);
-        $this->logger = Logger::getLogger();
+        $this->setAccessedRoles([USER, ADMIN]);
     }
 
     public function execute(): void
     {
 
-        if (isset($_SESSION['user'])) {
+        if ($this->checkUserPermission()) {
+            /** @var User $userFromSession */
             $userFromSession = $_SESSION['user'];
 
             HtmlPageWriter::writeUserInfo($userFromSession);
@@ -27,24 +24,26 @@ class DefaultCommand extends PermissionCtrl implements Command
 
             $userService = FactoryService::getInstance()->getUserService();
             $pageQuantity = ceil($userService->countUsers() / NUM_OF_USERS_ON_ONE_PAGE);
-            $page = min(key_exists('page', $_GET) ? $_GET['page'] : 1, $pageQuantity);
-            if ($page < 1) {
-                $page = 1;
-            }
+            $page = $this->checkGetPageRequest($pageQuantity);
 
             $arrayOfUsers = $userService->showSeparately($page);
-            /** @var User $userFromSession */
             if ($userFromSession->getRole() == "admin") {
-                $this->logger->log("The admin visit Home page", INFO_LEVEL);
                 HtmlPageWriter::writeCreateUserButton();
                 HtmlPageWriter::writeAllUsersForAdmin($arrayOfUsers, $pageQuantity, $userFromSession);
             } else {
-                $this->logger->log("The user visit Home page", INFO_LEVEL);
                 HtmlPageWriter::writeAllUsersForUser($arrayOfUsers, $pageQuantity);
             }
         } else {
-            $this->logger->log("The unknown user visit Home page", INFO_LEVEL);
             HtmlPageWriter::writeSignInButton();
         }
+    }
+
+    private function checkGetPageRequest(int $pageQuantity):int{
+        $page = min(key_exists('page', $_GET) ? $_GET['page'] : 1, $pageQuantity);
+        $_GET['page'] = $page;
+        if ($page < 1) {
+            $page = 1;
+        }
+        return $page;
     }
 }

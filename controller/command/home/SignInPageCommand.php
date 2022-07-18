@@ -17,7 +17,7 @@ class SignInPageCommand implements Command
                 if ($userService->isUserExist($authorizationInfo)) {
                     $user = $userService->showUser($authorizationInfo);
                     $_SESSION['user'] = $user;
-                    Router::redirect();
+                    Router::redirect(HOME_PAGE . "/" . $user->getId() . "/profile");
                 } else {
                     $_SESSION['login'] = $_POST['mail'];
                     Router::redirect(LOGIN_PAGE);
