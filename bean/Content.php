@@ -2,9 +2,9 @@
 
 class Content implements JsonSerializable
 {
-    private array $text;
-    private array $linkToTheArticle;
-    private array $linkToTheVideo;
+    private array $texts;
+    private array $linksToTheArticles;
+    private array $linksToTheVideos;
 
     /**
      * @param array $text
@@ -13,85 +13,109 @@ class Content implements JsonSerializable
      */
     public function __construct(array $text = [], array $linkToTheArticle = [], array $linkToTheVideo = [])
     {
-        $this->text = $text;
-        $this->linkToTheArticle = $linkToTheArticle;
-        $this->linkToTheVideo = $linkToTheVideo;
+        $this->texts = $text;
+        $this->linksToTheArticles = $linkToTheArticle;
+        $this->linksToTheVideos = $linkToTheVideo;
     }
 
     /**
      * @return array
      */
-    public function getText(): array
+    public function getTexts(): array
     {
-        return $this->text;
+        return $this->texts;
     }
 
     /**
-     * @param array $text
+     * @param array $texts
      */
-    public function setText(array $text): void
+    public function setTexts(array $texts): void
     {
-        $this->text = $text;
-    }
-
-    /**
-     * @return array
-     */
-    public function getLinkToTheArticle(): array
-    {
-        return $this->linkToTheArticle;
-    }
-
-    /**
-     * @param array $linkToTheArticle
-     */
-    public function setLinkToTheArticle(array $linkToTheArticle): void
-    {
-        $this->linkToTheArticle = $linkToTheArticle;
+        $this->texts = $texts;
     }
 
     /**
      * @return array
      */
-    public function getLinkToTheVideo(): array
+    public function getLinksToTheArticles(): array
     {
-        return $this->linkToTheVideo;
+        return $this->linksToTheArticles;
     }
 
     /**
-     * @param array $linkToTheVideo
+     * @param array $linksToTheArticles
      */
-    public function setLinkToTheVideo(array $linkToTheVideo): void
+    public function setLinksToTheArticles(array $linksToTheArticles): void
     {
-        $this->linkToTheVideo = $linkToTheVideo;
+        $this->linksToTheArticles = $linksToTheArticles;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLinksToTheVideos(): array
+    {
+        return $this->linksToTheVideos;
+    }
+
+    /**
+     * @param array $linksToTheVideos
+     */
+    public function setLinksToTheVideos(array $linksToTheVideos): void
+    {
+        $this->linksToTheVideos = $linksToTheVideos;
     }
 
 
     public function jsonSerialize(): array
     {
-        return [
-            [
+        $array = [];
+        foreach ($this->texts as $text ){
+            $array[] = [
                 'type' => 'text',
-                'content' => $this->text
-            ],
-            [
+                'content' => $text];
+        }
+        foreach ($this->linksToTheArticles as $linkToTheArticle ){
+            $array[] = [
                 'type'=>'linkToTheArticle',
-                'content' => $this->linkToTheArticle
-            ],
-            [
+                'content' => $linkToTheArticle];
+        }
+        foreach ($this->linksToTheVideos as $linkToTheVideo ){
+            $array[] = [
                 'type'=>'linkToTheVideo',
-                'content' => $this->linkToTheVideo
-            ]
-        ];
+                'content' => $linkToTheVideo
+            ];
+        }
+
+        return $array;
+
     }
 
     public function setContentFieldsWithJson(string $jsonContent): void
     {
         $array = json_decode($jsonContent, JSON_OBJECT_AS_ARRAY);
+        $texts = [];
+        $linksToTheArticles = [];
+        $linksToTheVideos = [];
 
-        $this->text = $array['text'];
-        $this->linkToTheArticle = $array['linkToTheArticle'];
-        $this->linkToTheVideo = $array['linkToTheVideo'];
+        foreach ($array as $item){
+            switch ($item['type']){
+                case "text":
+                    $texts[] = $item['content'];
+                break;
+                case "linkToTheArticle":
+                    $linksToTheArticles[] = $item['content'];
+                    break;
+                case "linkToTheVideo":
+                    $linksToTheVideos[] = $item['content'];
+                    break;
+                default:
+                    break;
+            }
+        }
+        $this->texts = $texts;
+        $this->linksToTheArticles = $linksToTheArticles;
+        $this->linksToTheVideos = $linksToTheVideos;
     }
 
 
