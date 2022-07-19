@@ -3,7 +3,7 @@ require_once "./bean/User.php";
 require_once "./bean/info/AuthorizationInfo.php";
 require_once "./dao/Transaction.php";
 
-interface UserDao extends Transaction
+interface UserDao
 {
 
     public function countUsers(): int;

@@ -6,10 +6,12 @@ class FactoryService
     private static FactoryService $instance;
     private static bool $notInit = true;
     private UserService $userService;
+    private CourseService $courseService;
 
     private function __construct()
     {
         $this->userService = new UserServiceImpl();
+        $this->courseService = new CourseServiceImpl();
     }
 
 
@@ -25,5 +27,10 @@ class FactoryService
     public function getUserService(): UserService
     {
         return $this->userService;
+    }
+
+    public function getCourseService(): CourseService|CourseServiceImpl
+    {
+        return $this->courseService;
     }
 }
