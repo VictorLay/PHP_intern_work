@@ -1,19 +1,20 @@
 <?php
 require_once "./dao/impl/UserDaoImplMysql.php";
 require_once "./dao/UserDao.php";
+require_once "./dao/CourseDao.php";
 
 class FactoryDao
 {
-    //todo how to init constant with static block ar constructor ?
     private static FactoryDao $instance;
     private static bool $notInit = true;
     private UserDao $userDao;
+    private CourseDao $courseDao;
 
     private function __construct()
     {
         $this->userDao = new UserDaoImplMysql();
+        $this->courseDao = new CourseDaoImplMysql();
     }
-
 
     public static function getInstance(): FactoryDao
     {
@@ -27,6 +28,11 @@ class FactoryDao
     public function getUserDao(): UserDao
     {
         return $this->userDao;
+    }
+
+    public function getCourseDao(): CourseDaoImplMysql|CourseDao
+    {
+        return $this->courseDao;
     }
 
 }

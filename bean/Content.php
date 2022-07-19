@@ -70,9 +70,19 @@ class Content implements JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'text' => $this->text,
-            'linkToTheArticle' => $this->linkToTheArticle,
-            'linkToTheVideo' => $this->linkToTheVideo];
+            [
+                'type' => 'text',
+                'content' => $this->text
+            ],
+            [
+                'type'=>'linkToTheArticle',
+                'content' => $this->linkToTheArticle
+            ],
+            [
+                'type'=>'linkToTheVideo',
+                'content' => $this->linkToTheVideo
+            ]
+        ];
     }
 
     public function setContentFieldsWithJson(string $jsonContent): void

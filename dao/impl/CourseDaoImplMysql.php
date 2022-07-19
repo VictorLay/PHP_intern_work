@@ -6,10 +6,10 @@ require_once "./dao/CourseDao.php";
 class CourseDaoImplMysql extends DaoMysqlImpl implements CourseDao
 {
     private const CREATE_QUERY = "INSERT INTO my_db_test.courses (`title`, `author_id`, `content`, `deleted`) VALUES ( :title , :authorId, :content, FALSE);";
-    private const READ_BY_ID_QUERY = "SELECT * FROM my_db_test.courses WHERE `courses`.`course_id` = :courseId;";
-    private const READ_BY_AUTHOR_ID_QUERY = "SELECT * FROM my_db_test.courses WHERE `courses`.`author_id` = :authorId;";
-    private const READ_BY_LIKE_STRING_IN_TITLE_QUERY = "SELECT * FROM my_db_test.courses WHERE courses.title like :likeVariable;";
-    private const UPDATE_QUERY = "UPDATE my_db_test.courses SET `title`=:title, `author_id`=:authorId, `content`=:content  WHERE `courses`.`course_id` = :courseId;";
+    private const READ_BY_ID_QUERY = "SELECT * FROM my_db_test.courses WHERE `courses`.`course_id` = :courseId AND deleted = FALSE;";
+    private const READ_BY_AUTHOR_ID_QUERY = "SELECT * FROM my_db_test.courses WHERE `courses`.`author_id` = :authorId AND deleted = FALSE;";
+    private const READ_BY_LIKE_STRING_IN_TITLE_QUERY = "SELECT * FROM my_db_test.courses WHERE courses.title like :likeVariable AND deleted = FALSE;";
+    private const UPDATE_QUERY = "UPDATE my_db_test.courses SET `title`=:title, `author_id`=:authorId, `content`=:content  WHERE `courses`.`course_id` = :courseId AND deleted = FALSE;";
     private const DELETE_BY_ID_QUERY = "UPDATE my_db_test.courses SET `deleted` = TRUE  WHERE `courses`.`course_id` = :courseId;";
 
 
@@ -71,7 +71,6 @@ class CourseDaoImplMysql extends DaoMysqlImpl implements CourseDao
         $authorId = $course->getAuthorId();
         $title = $course->getTitle();
         $contentJson = json_encode($course->getContent());
-//        :title, :authorId, :=content   :courseId;
 
         $statement = $this->connection->prepare(self::UPDATE_QUERY);
         $statement->bindParam(":courseId", $courseId, PDO::PARAM_INT);
