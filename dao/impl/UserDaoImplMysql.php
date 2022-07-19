@@ -7,13 +7,12 @@ require_once "./util/permission/PermissionCtrl.php";
 require_once "./resources/conf_const.php";
 
 
-class UserDaoImplMysql implements UserDao
+class UserDaoImplMysql extends DaoMysqlImpl implements UserDao
 {
-    private PDO $connection;
-    private Logger $logger;
+
     private const CREATE_QUERY = "INSERT INTO my_db_test.users (`email`, `country`, `name`,`password`, `deleted`, `avatar_id`) VALUES ( :email , :country, :name, :password, false, 1);";
     private const SHOW_ALL_QUERY = "SELECT `id`, `email`, `country`, `role`, `name` FROM users JOIN user_role ON users.id = user_role.user_id JOIN roles ON user_role.role_id = roles.role_id  WHERE `deleted` = FALSE order by `user_id`;";
-    private const SHOW_LIMITED_USERS_QUERY = "SELECT `id`, `email`, `country`, `role`, `name`, `picture_path` FROM users JOIN user_role ON users.id = user_role.user_id JOIN roles ON user_role.role_id = roles.role_id JOIN users_avatar ON users.avatar_id = users_avatar.avatar_id where `deleted` = 0 order by -`user_id`  LIMIT :user_count, :num_of_users";
+    private const SHOW_LIMITED_USERS_QUERY = "SELECT `id`, `email`, `country`, `role`, `name`, `picture_path` FROM users JOIN user_role ON users.id = user_role.user_id JOIN roles ON user_role.role_id = roles.role_id JOIN users_avatar ON users.avatar_id = users_avatar.avatar_id where `deleted` = false order by -`user_id`  LIMIT :user_count, :num_of_users";
     private const SHOW_USER_BY_MAIL_QUERY = "SELECT `id`, `email`, `country`, `role`, `name`, `password`, `picture_path` FROM users JOIN user_role ON users.id = user_role.user_id JOIN roles ON user_role.role_id = roles.role_id JOIN users_avatar ON users.avatar_id = users_avatar.avatar_id WHERE users.`email`=:email and `deleted` = FALSE;";
     private const SHOW_USER_BY_ID_QUERY = "SELECT `id`, `email`, `country`, `role`, `name`, `picture_path` FROM users JOIN user_role ON users.id = user_role.user_id JOIN roles ON user_role.role_id = roles.role_id JOIN users_avatar ON users.avatar_id = users_avatar.avatar_id WHERE users.`id`=:user_id and `deleted` = FALSE;";
     private const UPDATE_BY_ID_QUERY = "UPDATE `my_db_test`.`users` SET `email`=:email, `country`=:country, `name`=:name, `avatar_id`=:avatar_id WHERE `id`=:id and `deleted`=FALSE;";
@@ -21,12 +20,6 @@ class UserDaoImplMysql implements UserDao
     private const COUNT_USERS_QUERY = "SELECT COUNT(*) FROM `users` where `deleted` = false;";
     private const CREATE_USER_ROLE_QUERY = "INSERT INTO `user_role` (`user_id`, `role_id`) VALUES (:user_id, :role_id)";
 
-
-    public function __construct()
-    {
-        $this->logger = Logger::getLogger();
-        $this->connection = new PDO('mysql:host=localhost;dbname=my_db_test;charset=utf8', 'root', 'mynewpassword');
-    }
 
 
     /**
@@ -222,21 +215,6 @@ class UserDaoImplMysql implements UserDao
         $statement->execute([
             ':id' => $id
         ]);
-    }
-
-    public function beginTransaction(): void
-    {
-        $this->connection->beginTransaction();
-    }
-
-    public function commit(): void
-    {
-        $this->connection->commit();
-    }
-
-    public function rollback(): void
-    {
-        $this->connection->rollBack();
     }
 
 }
