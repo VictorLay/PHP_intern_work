@@ -17,17 +17,22 @@ class CourseServiceImpl implements CourseService
 
     public function findCourse(int $courseId): Course
     {
-        return $this->courseModel->readCourseById($courseId);
+        return $this->sterilizeOutput($this->courseModel->readCourseById($courseId));
     }
 
     public function findAuthorsCourses(int $authorId): array
     {
-        return $this->courseModel->readCoursesByAuthorId($authorId);
+        return $this->sterilizeOutput($this->courseModel->readCoursesByAuthorId($authorId));
     }
 
     public function findCoursesWithSameTitle(string $partOfTitle): array
     {
-        return $this->courseModel->readCoursesBySameTitle($partOfTitle);
+        return $this->sterilizeOutput($this->courseModel->readCoursesBySameTitle($partOfTitle));
+    }
+
+    public function findAllCourses(): array
+    {
+        return $this->sterilizeOutput($this->courseModel->readAllCourses());
     }
 
     public function updateCourse(Course $course): void
@@ -42,12 +47,58 @@ class CourseServiceImpl implements CourseService
 
     public function showDeletedUserCourses(int $userId): array
     {
-        return $this->courseModel->readDeletedCourses($userId);
+        return $this->sterilizeOutput($this->courseModel->readDeletedCourses($userId));
     }
 
     public function recoverCourse(int $courseId): void
     {
         $this->courseModel->recoverCourse($courseId);
+    }
+
+    private function sterilizeOutput(Course|array $courses): Course|array
+    {
+       if( is_array($courses)){
+           /** @var Course $course */
+           foreach ($courses as $course) {
+               $course = $this->sterilizeCourse($course);
+           }
+           return $courses;
+       }else{
+           return $this->sterilizeCourse($courses);
+       }
+    }
+
+    private function sterilizeCourse(Course $course):Course {
+        $course->setTitle(
+            htmlspecialchars($course->getTitle())
+        );
+        $content = $course->getContent();
+        $texts = [];
+        $videos = [];
+        $articles = [];
+        foreach ($content->getTexts() as $text){
+            if (is_null($text)){
+                continue;
+            }
+            $texts[] = htmlspecialchars($text);
+        }
+        foreach ($content->getLinksToTheVideos() as $video){
+            if (is_null($video)){
+                continue;
+            }
+            $videos[] = htmlspecialchars($video);
+        }
+        foreach ($content->getLinksToTheArticles() as $article){
+            if (is_null($article)){
+                continue;
+            }
+            $articles[] = htmlspecialchars($article);
+        }
+        $content->setTexts($texts);
+        $content->setLinksToTheVideos($videos);
+        $content->setLinksToTheArticles($articles);
+
+        return $course;
     }
 
 }

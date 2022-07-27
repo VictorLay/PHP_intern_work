@@ -10,6 +10,8 @@ interface CourseService
 
     public function findCoursesWithSameTitle(string $partOfTitle): array;
 
+    public function findAllCourses(): array;
+
     public function updateCourse(Course $course): void;
 
     public function deleteCourse(int $courseId): void;
