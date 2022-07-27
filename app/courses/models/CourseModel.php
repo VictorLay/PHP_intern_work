@@ -11,6 +11,8 @@ interface CourseModel
 
     public function readCoursesBySameTitle(string $title): array;
 
+    public function readAllCourses(): array;
+
     public function updateCourse(Course $course): void;
 
     public function deleteCourse(int $courseId): void;

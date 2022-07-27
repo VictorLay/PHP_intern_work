@@ -5,6 +5,7 @@ class CourseModelImpl extends TransactionImpl implements CourseModel
 {
     private const CREATE_QUERY = "INSERT INTO my_db_test.courses (`title`, `author_id`, `content`, `deleted`) VALUES ( :title , :authorId, :content, FALSE);";
     private const READ_BY_ID_QUERY = "SELECT * FROM my_db_test.courses WHERE `courses`.`course_id` = :courseId AND deleted = FALSE;";
+    private const READ_ALL_COURSES_QUERY = "SELECT * FROM my_db_test.courses WHERE deleted = FALSE;";
     private const READ_BY_AUTHOR_ID_QUERY = "SELECT * FROM my_db_test.courses WHERE `courses`.`author_id` = :authorId AND deleted = FALSE;";
     private const READ_BY_LIKE_STRING_IN_TITLE_QUERY = "SELECT * FROM my_db_test.courses WHERE courses.title like :likeVariable AND deleted = FALSE;";
     private const READ_DELETED_COURSES_BY_AUTHOR_ID = "SELECT * FROM my_db_test.courses WHERE `courses`.`author_id` = :authorId AND deleted = TRUE;";
@@ -64,6 +65,18 @@ class CourseModelImpl extends TransactionImpl implements CourseModel
         }
         return $courseFromQuery;
     }
+
+    public function readAllCourses(): array
+    {
+        $statement = $this->connection->prepare(self::READ_ALL_COURSES_QUERY);
+        $statement->execute();
+        $courseFromQuery = [];
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $courseFromQuery[] = $this->extractCourseFromRow($row);
+        }
+        return $courseFromQuery;
+    }
+
 
     public function updateCourse(Course $course): void
     {
