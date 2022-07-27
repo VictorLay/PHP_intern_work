@@ -113,18 +113,17 @@ class ShowUsersHtml extends ProfileHtml
 
     private static function prepareUserRowsForAdminTable(array $users, User $userFromSession): string
     {
-        $UPDATE_ANOTHER_USER_PAGE = UPDATE_ANOTHER_USER_PAGE;
-        $DELETE_USER_PAGE = DELETE_USER_PAGE;
         $usersWrite = "";
         /** @var User $user */
         foreach ($users as $user) {
             $userRole = $user->getRole();
             $userId = $user->getId();
             $usersWrite .= self::parseUserToTable($user);
+
+            $updateUserPage = SHOW_ALL_USERS_PAGE . "/$userId". UPDATE_URN;
             if ($userRole != ADMIN || $userFromSession->getId() == $userId) {
                 $usersWrite .= "<td>
-                                    <form action='$UPDATE_ANOTHER_USER_PAGE' method='get'>
-                                        <input type='hidden' value='$userId' name='user_id'>
+                                    <form action='$updateUserPage' method='get'>
                                         <input type='submit' value='update'>
                                     </form>
                                 </td>";
@@ -132,10 +131,10 @@ class ShowUsersHtml extends ProfileHtml
                 $usersWrite .= "<td></td>";
             }
 
+            $deleteUserPage = SHOW_ALL_USERS_PAGE. "/$userId".DELETE_URN;
             if ($userId != $userFromSession->getId() && $userRole != ADMIN) {
                 $usersWrite .= "<td>
-                                        <form action='$DELETE_USER_PAGE' method='get'>
-                                            <input type='hidden' value='$userId' name='user_id'>
+                                        <form action='$deleteUserPage' method='get'>
                                             <input type='submit' value='delete'>
                                         </form>
                                     </td>
@@ -155,12 +154,12 @@ class ShowUsersHtml extends ProfileHtml
         $userCountry = $user->getCountry();
         $userName = $user->getName();
         $userRole = $user->getRole();
-        $SHOW_USER_PAGE = SHOW_USER_PAGE;
+        $SHOW_USER_PAGE = "SHOW_USER_PAGE";
 
         return
             "<td><img src='$userAvatarPath' width='70' height='70' ></td> \n
             <td>$userId</td> \n
-            <td><a href='$SHOW_USER_PAGE?user_id=$userId'>$userEmail</a></td> \n
+            <td><a href='".SHOW_ALL_USERS_PAGE."/".$userId."'>$userEmail</a></td> \n
             <td>$userCountry</td> \n
             <td>$userName</td> \n
             <td>$userRole</td>\n";

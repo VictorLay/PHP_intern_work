@@ -7,13 +7,11 @@ class ProfileHtml extends HomeHtml
     public static function writeUserProfile(User $user): void
     {
         $HOME_PAGE = HOME_PAGE;
-        $UPDATE_ANOTHER_USER_PAGE = UPDATE_ANOTHER_USER_PAGE;
-        $userId = $user->getId();
+        $updatePage = SHOW_ALL_USERS_PAGE . "/{$user->getId()}" . UPDATE_URN;
         $userWrite = $user;
         if ($user->getRole() != ADMIN) {
             $userWrite .= "<td>
-                         <form action='$UPDATE_ANOTHER_USER_PAGE' method='get'>
-                           <input type='hidden' value='$userId' name='user_id'>
+                         <form action='$updatePage' method='get'>
                            <input type='submit' value='update'>
                          </form>
                        </td>";
@@ -64,10 +62,10 @@ class ProfileHtml extends HomeHtml
     public static function writeSignedUserProfile(User $user): void
     {
         $HOME_PAGE = HOME_PAGE;
-        $UPDATE_USER_PAGE = UPDATE_USER_PAGE;
+        $updatePage = SHOW_ALL_USERS_PAGE . "/{$user->getId()}" . UPDATE_URN;
         $userWrite = $user;
         $userWrite .= "<td>
-                         <form action='$UPDATE_USER_PAGE' method='post'>
+                         <form action='$updatePage' method='get'>
                            <input type='submit' value='update'>
                          </form>
                        </td>";
@@ -115,6 +113,6 @@ class ProfileHtml extends HomeHtml
 
     public static function writeProfileButton(): void
     {
-        echo "<h2><a href='" . PROFILE_PAGE . "'>Your profile</a></h2>";
+        echo "<h2><a href='" . "PROFILE_PAGE" . "'>Your profile</a></h2>";
     }
 }

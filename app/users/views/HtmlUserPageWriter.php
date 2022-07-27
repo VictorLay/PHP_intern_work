@@ -1,6 +1,6 @@
 <?php
 
-class HtmlPageWriter extends ShowUsersHtml
+class HtmlUserPageWriter extends ShowUsersHtml
 {
 
     public static function writeUserInfo(User $user): void
@@ -18,12 +18,12 @@ class HtmlPageWriter extends ShowUsersHtml
 
     public static function writeCreateUserHtmlForm(): void
     {
-        $CREATE_USER_PAGE = CREATE_USER_PAGE;
+        $createUserUrl = CREATE_USER_PAGE;
         if (key_exists("not_valid_user_data", $_SESSION)) {
             /** @var User $notValidUser */
             $notValidUser = $_SESSION["not_valid_user_data"];
             echo "<div>" . $_SESSION['validator_response'] . "</div>
-       <form action='$CREATE_USER_PAGE' method='post'><br/>
+       <form action='$createUserUrl' method='post'><br/>
             <input type='text' name='user_email' value='" . $notValidUser->getEmail() . "'/><br/>
             <input type='text' name='user_country' value='" . $notValidUser->getCountry() . "'/><br/>
             <input type='text' name='user_name' value='" . $notValidUser->getName() . "'/><br/>
@@ -34,7 +34,7 @@ class HtmlPageWriter extends ShowUsersHtml
         ";
         } else {
             echo "
-       <form action='$CREATE_USER_PAGE' method='post'><br/>
+       <form action='$createUserUrl' method='post'><br/>
             <input type='text' name='user_email' placeholder='email'/><br/>
             <input type='text' name='user_country' placeholder='country'/><br/>
             <input type='text' name='user_name' placeholder='name'/><br/>
@@ -48,9 +48,9 @@ class HtmlPageWriter extends ShowUsersHtml
 
     }
 
+
     public static function writeUpdateUserHtmlForm(User $user, User $userFromSession): void
     {
-        $UPDATE_USER_PAGE = UPDATE_USER_PAGE;
         $HOME_PAGE = HOME_PAGE;
 
         $userName = $user->getName();
@@ -97,10 +97,10 @@ class HtmlPageWriter extends ShowUsersHtml
                 </form>";
     }
 
-
     public static function writeSignedUserUpdateForm(User $user): void
     {
-        $UPDATE_USER_PAGE = UPDATE_USER_PAGE;
+
+
         $HOME_PAGE = HOME_PAGE;
 
         $userName = $user->getName();
@@ -108,6 +108,7 @@ class HtmlPageWriter extends ShowUsersHtml
         $userEmail = $user->getEmail();
         $userAvatarPath = stristr($user->getAvatarPath(), "/");
         $userId = $user->getId();
+        $UPDATE_USER_PAGE = SHOW_ALL_USERS_PAGE . "/". $userId . UPDATE_URN;
 
         echo "
                 <form action='$UPDATE_USER_PAGE' method='post' enctype='multipart/form-data'><br/>
@@ -144,7 +145,5 @@ class HtmlPageWriter extends ShowUsersHtml
         ";
     }
 
- 
 
-
- }
+}

@@ -5,9 +5,9 @@ class App
 
     public function run(): void
     {
-        self::init();
-        self::service();
-        self::destroy();
+        $this->init();
+        $this->service();
+        $this->destroy();
 
     }
 
@@ -34,23 +34,20 @@ class App
         }
     }
 
+
     private function service(): void
     {
-        $logger = Logger::getLogger("controller");
         $uri = $_SERVER['REQUEST_URI'];
         if (preg_match("/\?/", $uri)) {
             $uri = stristr($uri, "?", true);
         }
-        $logger->log($uri, DEBUG_LEVEL);
-        $controller = RouterImpl::getController($uri);
-        $logger->log($controller::class, DEBUG_LEVEL);
-        $controller->execute();
+        $router = new Router();
+        $router->doSomething($uri);
+
     }
 
 
-
-    private static function destroy(): void
+    private function destroy(): void
     {
-//        unset($_SESSION['user']);
     }
 }
