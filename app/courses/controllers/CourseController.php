@@ -1,5 +1,16 @@
 <?php
 
+namespace app\courses\controllers;
+
+use app\core\utils\permission\impl\PermissionImpl;
+use app\core\services\factory\ServiceFactory;
+use app\core\views\CoreHtmlPageWriter;
+use app\core\utils\Redirection;
+use app\users\entities\User;
+use app\courses\entities\Content;
+use app\courses\views\HtmlCoursePageWriter;
+use app\courses\entities\Course;
+
 /** @link Router */
 class CourseController extends PermissionImpl
 {
@@ -62,21 +73,27 @@ class CourseController extends PermissionImpl
                     HtmlCoursePageWriter::writeUpdateCoursePage($course);
                     break;
                 case "POST":
+                    var_dump($_POST);
+
                     $requiredPostKeys = ['content_type'];
                     if ($this->checkPostKeys($requiredPostKeys)) {
                         $this->addContentForm($_POST['content_type']);
                     }
+
                     $requiredPostKeys = ['content'];
                     if ($this->checkPostKeys($requiredPostKeys)) {
                         $content = $this->addContentAction($_POST['content'], $course->getContent());
                         $course->setContent($content);
+                        $course->setTitle(htmlspecialchars_decode($course->getTitle()));
                         $courseService->updateCourse($course);
                         Redirection::redirect(SHOW_USER_COURSES . "/$courseId" . UPDATE_URN);
                     }
+
                     $requiredPostKeys = ['delete_content'];
                     if ($this->checkPostKeys($requiredPostKeys)) {
                         $content = $this->removeContentAction($_POST['delete_content_type'], $course->getContent());
                         $course->setContent($content);
+                        $course->setTitle(htmlspecialchars_decode($course->getTitle()));
                         $courseService->updateCourse($course);
                         Redirection::redirect(SHOW_USER_COURSES . "/$courseId" . UPDATE_URN);
                     }
@@ -149,6 +166,32 @@ class CourseController extends PermissionImpl
 
     }
 
+    public function displaySearchPage(array $infFromUri): void
+    {
+        $requestMethod = $infFromUri['REQUEST_METHOD'];
+        $this->setAccessedRoles([ADMIN, USER]);
+        if ($this->checkUserPermission()){
+            switch ($requestMethod) {
+                case "GET":
+                    if (key_exists("search",$_GET)){
+                        $courseService = ServiceFactory::getInstance()->getCourseService();
+                        $sameCourses = $courseService->findCoursesWithSameTitle($_GET['search']);
+                        HtmlCoursePageWriter::writeSearchPage();
+                        HtmlCoursePageWriter::writeCoursesPage($sameCourses);
+                    }else{
+                        HtmlCoursePageWriter::writeSearchPage();
+                    }
+                    break;
+                case "POST":
+                    CoreHtmlPageWriter::write405ErrorPage();
+                    break;
+            }
+        }else{
+            CoreHtmlPageWriter::write403ErrorPage();
+        }
+    }
+
+
     private function addContentForm(string $contentType): void
     {
         switch ($contentType) {
@@ -200,15 +243,15 @@ class CourseController extends PermissionImpl
                 $content->setTexts($texts);
                 return $content;
             case "video":
-                $video = $_POST['video'];
+                $videoIndex = $_POST['delete_content'];
                 $videos = $content->getLinksToTheVideos();
-                $videos[] = $video;
+                unset($videos[$videoIndex]);
                 $content->setLinksToTheVideos($videos);
                 return $content;
             case "article":
-                $article = $_POST['article'];
+                $articleIndex = $_POST['delete_content'];
                 $articles = $content->getLinksToTheArticles();
-                $articles[] = $article;
+                unset($articles[$articleIndex]);
                 $content->setLinksToTheArticles($articles);
                 return $content;
         }
