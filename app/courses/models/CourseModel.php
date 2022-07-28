@@ -1,5 +1,9 @@
 <?php
 
+namespace app\courses\models;
+
+use app\courses\entities\Course;
+
 interface CourseModel
 {
 

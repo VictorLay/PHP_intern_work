@@ -1,5 +1,9 @@
 <?php
 
+namespace app\core\models\connection;
+
+use PDO;
+
 class ModelConnection
 {
     private static bool $notInit = true;

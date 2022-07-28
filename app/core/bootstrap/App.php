@@ -1,5 +1,10 @@
 <?php
 
+namespace app\core\bootstrap;
+
+use app\core\utils\logger\Logger;
+use app\core\routers\Router;
+
 class App
 {
 

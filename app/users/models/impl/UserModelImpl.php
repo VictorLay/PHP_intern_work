@@ -1,5 +1,17 @@
 <?php
 
+namespace app\users\models\impl;
+
+
+
+use app\core\exceptions\ModelException;
+use app\core\models\TransactionImpl;
+use app\core\utils\permission\PermissionCtrl;
+use app\users\entities\AuthorizationInfo;
+use app\users\entities\User;
+use app\users\models\UserModel;
+use Exception;
+use PDO;
 
 class UserModelImpl extends TransactionImpl implements UserModel
 {

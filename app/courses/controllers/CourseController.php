@@ -170,15 +170,15 @@ class CourseController extends PermissionImpl
     {
         $requestMethod = $infFromUri['REQUEST_METHOD'];
         $this->setAccessedRoles([ADMIN, USER]);
-        if ($this->checkUserPermission()){
+        if ($this->checkUserPermission()) {
             switch ($requestMethod) {
                 case "GET":
-                    if (key_exists("search",$_GET)){
+                    if (key_exists("search", $_GET)) {
                         $courseService = ServiceFactory::getInstance()->getCourseService();
                         $sameCourses = $courseService->findCoursesWithSameTitle($_GET['search']);
                         HtmlCoursePageWriter::writeSearchPage();
                         HtmlCoursePageWriter::writeCoursesPage($sameCourses);
-                    }else{
+                    } else {
                         HtmlCoursePageWriter::writeSearchPage();
                     }
                     break;
@@ -186,7 +186,43 @@ class CourseController extends PermissionImpl
                     CoreHtmlPageWriter::write405ErrorPage();
                     break;
             }
-        }else{
+        } else {
+            CoreHtmlPageWriter::write403ErrorPage();
+        }
+    }
+
+    public function displayDeletedCourses(array $infFromUri): void
+    {
+        $requestMethod = $infFromUri['REQUEST_METHOD'];
+        $this->setAccessedRoles([ADMIN, USER]);
+        if ($this->checkUserPermission()) {
+            /** @var User $userFromSession */
+            $userFromSession = $_SESSION['user'];
+            switch ($requestMethod) {
+                case "GET":
+                    $courseService = ServiceFactory::getInstance()->getCourseService();
+                    $deletedCourses = $courseService->showDeletedUserCourses($userFromSession->getId());
+                    HtmlCoursePageWriter::writeDeletedCoursesPage($deletedCourses);
+                    break;
+                case "POST":
+                    $requiredPostKeys = ["recovering_course_id"];
+                    if ($this->checkPostKeys($requiredPostKeys)) {
+                        $recoveringCourseId = $_POST['recovering_course_id'];
+                        $courseService = ServiceFactory::getInstance()->getCourseService();
+                        $courseService->recoverCourse($recoveringCourseId);
+                        $course = $courseService->findCourse($recoveringCourseId);
+                        echo "
+                            <a href='/'>Домой</a>
+                            <br/>
+                            <h3>Восстановленный курс:</h3>";
+                        HtmlCoursePageWriter::writeCoursePage($course);
+
+                    } else {
+                        CoreHtmlPageWriter::write422ErrorPage();
+                    }
+                    break;
+            }
+        } else {
             CoreHtmlPageWriter::write403ErrorPage();
         }
     }

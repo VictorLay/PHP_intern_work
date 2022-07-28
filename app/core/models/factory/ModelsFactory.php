@@ -1,5 +1,12 @@
 <?php
 
+namespace app\core\models\factory;
+
+use app\users\models\UserModel;
+use app\courses\models\CourseModel;
+use app\users\models\impl\UserModelImpl;
+use app\courses\models\impl\CourseModelImpl;
+
 class ModelsFactory
 {
     private static ModelsFactory $instance;

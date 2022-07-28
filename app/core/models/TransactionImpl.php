@@ -1,5 +1,11 @@
 <?php
 
+namespace app\core\models;
+
+use PDO;
+use app\core\utils\logger\Logger;
+use app\core\models\connection\ModelConnection;
+
 abstract class TransactionImpl implements Transaction
 {
     protected PDO $connection;
@@ -9,7 +15,6 @@ abstract class TransactionImpl implements Transaction
     {
         $this->logger = Logger::getLogger();
         $this->connection = ModelConnection::getConnection();
-//        $this->connection = new PDO('mysql:host=localhost;dbname=my_db_test;charset=utf8', 'root', 'mynewpassword');
     }
 
     public function beginTransaction(): void

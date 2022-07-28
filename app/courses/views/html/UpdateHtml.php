@@ -1,6 +1,8 @@
 <?php
 
-use app\courses\views\html\DeleteHtml;
+namespace app\courses\views\html;
+
+use app\courses\entities\Course;
 
 class UpdateHtml extends DeleteHtml
 {
@@ -19,7 +21,8 @@ class UpdateHtml extends DeleteHtml
 
         foreach ($texts as $key=>$text) {
             echo "
-        <div>
+        <div style='background-color: aqua'>
+        <h5>Text content</h5>
             <form action='$updateUrl' method='post'>
                 <pre style=' font-size: large '>$text</pre>
                 <input type='hidden' name='delete_content_type' value='text'>
@@ -33,7 +36,9 @@ class UpdateHtml extends DeleteHtml
 
         foreach ($videoLinks as $key=>$videoLink) {
             echo "
-        <div>
+        <div style='background-color: bisque'>
+                <h5>video content</h5>
+
             <form action='$updateUrl' method='post'>
                 $videoLink
                 <input type='hidden' name='delete_content_type' value='video'>
@@ -46,7 +51,9 @@ class UpdateHtml extends DeleteHtml
 
         foreach ($articleLinks as $key=>$articleLink) {
             echo "
-        <div>
+        <div style='background-color: gainsboro' >
+                <h5>article content</h5>
+
             <form action='$updateUrl' method='post'>
                 $articleLink
                 <input type='hidden' name='delete_content_type' value='article'>

@@ -1,5 +1,9 @@
 <?php
 
+namespace app\users\entities;
+
+use app\core\entities\Entity;
+
 class User extends Entity
 {
     private string $email;

@@ -1,5 +1,9 @@
 <?php
 
+namespace app\core\routers;
+
+use app\core\views\CoreHtmlPageWriter;
+
 /** @link UserController  */
 /** @link CourseController */
 class Router
@@ -9,61 +13,69 @@ class Router
 
     private array $controllerArray = [
         "\/" => [
-            self::CONTROLLER => "UserController",
+            self::CONTROLLER => "app\users\controllers\UserController",
             self::ACTION => "displayHomePage"],
         "\/login" => [
-            self::CONTROLLER => "UserController",
+            self::CONTROLLER => "app\users\controllers\UserController",
             self::ACTION => "displayLoginPage"
         ],
         "\/logout" => [
-            self::CONTROLLER => "UserController",
+            self::CONTROLLER => "app\users\controllers\UserController",
             self::ACTION => "displayLogoutPage"
         ],
         "\/users" => [
-            self::CONTROLLER => "UserController",
+            self::CONTROLLER => "app\users\controllers\UserController",
             self::ACTION => "displayUsersPage"
         ],
         "\/users\/(\d+)" => [
-            self::CONTROLLER => "UserController",
+            self::CONTROLLER => "app\users\controllers\UserController",
             self::ACTION => "displayUserProfilePage"
         ],
         "\/users\/(\d+)\/update" => [
-            self::CONTROLLER => "UserController",
+            self::CONTROLLER => "app\users\controllers\UserController",
             self::ACTION => "displayUpdatePage"
         ],
         "\/users\/(\d+)\/delete" => [
-            self::CONTROLLER => "UserController",
+            self::CONTROLLER => "app\users\controllers\UserController",
             self::ACTION => "displayDeletePage"
         ],
         "\/create" => [
-            self::CONTROLLER => "UserController",
+            self::CONTROLLER => "app\users\controllers\UserController",
             self::ACTION => "displayCreateUserPage"
         ],
 
 
         "\/courses" => [
-            self::CONTROLLER => "CourseController",
+            self::CONTROLLER => "app\courses\controllers\CourseController",
             self::ACTION => "displayUserCoursesPage"
         ],
         "\/courses\/(\d+)" => [
-            self::CONTROLLER => "CourseController",
+            self::CONTROLLER => "app\courses\controllers\CourseController",
             self::ACTION => "displayCourse"
         ],
         "\/courses\/catalog" => [
-            self::CONTROLLER => "CourseController",
+            self::CONTROLLER => "app\courses\controllers\CourseController",
             self::ACTION => "displayAllCoursesPage"
         ],
         "\/courses\/(\d+)\/update" => [
-            self::CONTROLLER => "CourseController",
+            self::CONTROLLER => "app\courses\controllers\CourseController",
             self::ACTION => "displayUpdateCoursePage"
         ],
         "\/courses\/(\d+)\/delete" => [
-            self::CONTROLLER => "CourseController",
+            self::CONTROLLER => "app\courses\controllers\CourseController",
             self::ACTION => "displayDeleteCoursePage"
         ],
         "\/courses\/create" => [
-            self::CONTROLLER => "CourseController",
+            self::CONTROLLER => "app\courses\controllers\CourseController",
             self::ACTION => "displayCreateCoursePage"
+        ],
+        "\/courses\/search" => [
+            self::CONTROLLER => "app\courses\controllers\CourseController",
+            self::ACTION => "displaySearchPage"
+        ],
+        "\/courses\/recover" => [
+            self::CONTROLLER => "app\courses\controllers\CourseController",
+            self::ACTION => "displayDeletedCourses"
         ]
 
 
@@ -84,7 +96,7 @@ class Router
             }
         }
         /* Если не найдено ни одно совпадение, то возвращается Html 404 страницы */
-        HtmlUserPageWriter::write404ErrorPage();
+        CoreHtmlPageWriter::write404ErrorPage();
     }
 
 }

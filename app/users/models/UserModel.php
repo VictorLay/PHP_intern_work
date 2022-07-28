@@ -1,5 +1,11 @@
 <?php
 
+namespace app\users\models;
+
+use app\core\exceptions\ModelException;
+use app\users\entities\User;
+use app\users\entities\AuthorizationInfo;
+
 interface UserModel
 {
 

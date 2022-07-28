@@ -1,5 +1,8 @@
 <?php
 
+namespace app\core\utils\interpreter;
+
+//use const {SHOW_USER};
 class UserInterpreter
 {
 

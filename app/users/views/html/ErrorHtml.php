@@ -1,5 +1,8 @@
 <?php
 
+namespace app\users\views\html;
+
+
 class ErrorHtml
 {
 

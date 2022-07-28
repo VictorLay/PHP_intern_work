@@ -14,6 +14,7 @@ define("UPDATE_URN", "/update");
 define("DELETE_URN", "/delete");
 
 define("SHOW_USER_COURSES", "/courses");
+define("SEARCH_COURSES", "/courses/search");
 define("SHOW_ALL_COURSES", SHOW_USER_COURSES . "/catalog");
 
 

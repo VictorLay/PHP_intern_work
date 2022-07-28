@@ -1,5 +1,9 @@
 <?php
 
+namespace app\courses\services;
+
+use app\courses\entities\Course;
+
 interface CourseService
 {
     public function createNewCourse(Course $course): int;

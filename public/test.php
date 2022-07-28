@@ -1,60 +1,67 @@
 <?php
-require_once "./dependencies.php";
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
-//require_once "./util/HtmlPageWriter.php";
-//require_once "./bean/User.php";
-//require_once "./resources/conf_const.php";
-//require_once "./bean/Course.php";
-//require_once "./dao/impl/CourseDaoImplMysql.php";
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
+spl_autoload_register(function ($className) {
+    $className = str_replace("\\", "/", $className);
+    include "../" . $className . '.php';
+});
+require_once "./dependencies.php";
+require_once "../app-resources/conf_const.php";
+require_once "../app-resources/CustomConstants.php";
+require_once "../config/routes.php";
+require_once "../app/users/controllers/UserController.php";
+//require_once "../app/core/routers/impl/RouterNewImpl.php";
+require_once "../config/database/migrations/migrate.php";
+$a = new A();
+$a->down();
+//$a->up();
 
-//$content =
-//    new Content(
-//        ["First Text","Second Text","Third Text"],
-//        ["link1","link2","link13"],
-//        ["linkVideo1","linkVideo2","linkVideo3"]);
-//$course = new Course("UpdateTest", 12, $content);
-//$course->setId(1);
-//echo CourseContentInterpreter::parseContentToJson($content);
-//var_dump(json_encode($content));
-//var_dump(json_decode(json_encode($content),JSON_OBJECT_AS_ARRAY));
-//var_dump(json_encode($content));
-//$content->setContentFieldsWithJson(json_encode($content));
-//var_dump($content);
-
-//echo file_get_contents("http://localhost/home");
-//
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-var_dump($_SESSION['user']);
-/** @var User $sessionUser */
-$sessionUser = $_SESSION['user'];
-var_dump($sessionUser);
-echo $sessionUser->getId();
-
-//unset($_SESSION['user']);
-
-//var_dump(json_decode(json_encode($content), JSON_OBJECT_AS_ARRAY));
-
-//    $courseDao = new CourseDaoImplMysql();
-//    $courseDao->updateCourse($course);
-//    echo $courseDao->create($course);
-//    $course = $courseDao->readCourseById(1);
-//    $course = $courseDao->readCoursesByAuthorId(122);
-//    $course = $courseDao->readCoursesBySameTitle("ig");
-//    var_dump($course);
-
-//echo json_encode([
-//    [
-//    "type"=>"article",
-//    "value"=>"125"
-//]
-//]);
-//if (key_exists('picture', $_FILES)) {1
-//    if (@copy($_FILES['picture']['tmp_name'], "./resources/" . $_FILES['picture']['name'])) {
-//        echo "COOOOOL!";
-//    }else{
-//        echo "Bed!";
-//    }
+//if (session_status() == PHP_SESSION_NONE) {
+//    session_start();
 //}
+//
+//$uriInfo['REQUEST_METHOD'] = $_SERVER['REQUEST_METHOD'];
+//
+//$con = new \app\courses\controllers\CourseController();
+//$con->displaySearchPage($uriInfo);
+
+
+
+//$query = include "../config/database/migrations/001_create_db_and_tables.php";
+
+
+
+//HtmlCoursePageWriter::writeCourseCreateForm();
+
+
+
+//$content = new Content(["Some First Text AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "Some First Text AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"], ["222222"], ["333333"]);
+//$courseModel = new CourseModelImpl();
+//$course = new Course("My Title", 12, $content);
+//
+//var_dump($content);
+//$json = json_encode($content);
+//var_dump($json);
+//$newCon = new Content();
+//$newCon->setContentFieldsWithJson($json);
+//var_dump($newCon);
+//var_dump($content->jsonSerialize());
+//var_dump(json_encode($content));
+//$courseModel->create($course);
+
+//error_reporting(E_ALL);
+//ini_set("display_errors", 1);
+//
+//
+//$uri = $_SERVER['REQUEST_URI'];
+//$router = new Router();
+//$router->doSomething($uri);
+
+//"/"; - home
+//"/users"; - show all users
+//"/users/(userId)"; - userProfile
+//"/login"
+//"/logout"
+

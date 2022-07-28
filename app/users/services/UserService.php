@@ -1,5 +1,11 @@
 <?php
 
+namespace app\users\services;
+
+
+use app\users\entities\AuthorizationInfo;
+use app\users\entities\User;
+
 interface UserService
 {
     public function isUserExist(AuthorizationInfo $authorizationInfo): bool;

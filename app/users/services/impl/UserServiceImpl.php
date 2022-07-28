@@ -1,5 +1,17 @@
 <?php
 
+namespace app\users\services\impl;
+
+use app\core\exceptions\ModelException;
+use app\core\models\factory\ModelsFactory;
+use app\core\utils\logger\Logger;
+use app\core\utils\validator\UserValidator;
+use app\users\entities\AuthorizationInfo;
+use app\users\entities\User;
+use app\users\models\UserModel;
+use app\users\services\UserService;
+
+
 class UserServiceImpl implements UserService
 {
     private UserModel $userModel;

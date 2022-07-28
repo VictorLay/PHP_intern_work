@@ -1,5 +1,15 @@
 <?php
 
+namespace app\users\controllers;
+
+
+use app\core\services\factory\ServiceFactory;
+use app\core\utils\permission\impl\PermissionImpl;
+use app\core\utils\Redirection;
+use app\users\entities\AuthorizationInfo;
+use app\users\entities\User;
+use app\users\views\HtmlUserPageWriter;
+
 /** @link Router */
 class UserController extends PermissionImpl
 {

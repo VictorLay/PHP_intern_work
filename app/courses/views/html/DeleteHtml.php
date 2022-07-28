@@ -2,9 +2,10 @@
 
 namespace app\courses\views\html;
 
-use Course;
 
-class DeleteHtml
+use app\courses\entities\Course;
+
+class DeleteHtml extends SearchHtml
 {
     public static function writeDeleteWarning(Course $course): void
     {

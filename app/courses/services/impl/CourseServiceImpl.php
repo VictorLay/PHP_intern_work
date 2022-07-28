@@ -1,5 +1,14 @@
 <?php
 
+namespace app\courses\services\impl;
+
+use app\core\models\factory\ModelsFactory;
+use app\courses\entities\Course;
+use app\courses\models\CourseModel;
+use app\courses\services\CourseService;
+
+
+
 class CourseServiceImpl implements CourseService
 {
 
@@ -37,6 +46,7 @@ class CourseServiceImpl implements CourseService
 
     public function updateCourse(Course $course): void
     {
+        $course->getContent()->decodeHtmlSpecialChar();
         $this->courseModel->updateCourse($course);
     }
 
@@ -55,8 +65,11 @@ class CourseServiceImpl implements CourseService
         $this->courseModel->recoverCourse($courseId);
     }
 
-    private function sterilizeOutput(Course|array $courses): Course|array
+    private function sterilizeOutput(Course|array|null $courses): Course|array|null
     {
+        if(is_null($courses)){
+            return null;
+        }
        if( is_array($courses)){
            /** @var Course $course */
            foreach ($courses as $course) {

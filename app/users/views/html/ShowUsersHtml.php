@@ -1,5 +1,10 @@
 <?php
 
+namespace app\users\views\html;
+
+
+use app\users\entities\User;
+
 class ShowUsersHtml extends ProfileHtml
 {
 

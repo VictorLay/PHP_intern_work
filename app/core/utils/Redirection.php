@@ -1,4 +1,7 @@
 <?php
+
+namespace app\core\utils;
+
 use JetBrains\PhpStorm\NoReturn;
 
 class Redirection
@@ -9,8 +12,8 @@ class Redirection
      * @link redirect method
      * it will give an error.
      */
-    //todo how to fix it?
-    #[NoReturn] public static function redirect(string $path = HOME_PAGE): void
+
+    #[NoReturn] public static function redirect(string $path = "/"): void
     {
         header("Location: http://localhost" . $path);
         exit();

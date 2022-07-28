@@ -1,5 +1,7 @@
 <?php
 
+namespace app\core\models;
+
 interface Transaction
 {
     public function beginTransaction(): void;

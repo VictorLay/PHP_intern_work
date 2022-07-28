@@ -1,5 +1,9 @@
 <?php
-require_once "./bean/Content.php";
+
+namespace app\courses\entities;
+
+use app\core\entities\Entity;
+
 
 class Course extends Entity
 {

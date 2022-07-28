@@ -1,5 +1,8 @@
 <?php
 
+namespace app\users\entities;
+
+
 class AuthorizationInfo
 {
 private string $password;

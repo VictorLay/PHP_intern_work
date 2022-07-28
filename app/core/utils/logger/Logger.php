@@ -1,5 +1,7 @@
 <?php
 
+namespace app\core\utils\logger;
+
 class Logger
 {
     private static string $PATH;

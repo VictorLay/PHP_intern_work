@@ -1,5 +1,9 @@
 <?php
 
+namespace app\core\utils\permission\impl;
+
+use app\users\entities\User;
+
 class PermissionImpl
 {
     private array $accessedRoles;

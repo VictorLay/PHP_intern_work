@@ -1,5 +1,8 @@
 <?php
 
+namespace app\courses\views\html;
+
+
 class CreateHtml extends ReadHtml
 {
     public static function writeCreateCourseForm(): void

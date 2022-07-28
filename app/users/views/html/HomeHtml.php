@@ -1,5 +1,9 @@
 <?php
 
+namespace app\users\views\html;
+
+
+use app\users\entities\User;
 
 class HomeHtml extends DeleteHtml
 {
@@ -9,6 +13,7 @@ class HomeHtml extends DeleteHtml
         $createNewCourseUrl = SHOW_USER_COURSES . CREATE_URN;
         $showUserCourses = SHOW_USER_COURSES;
         $showAllCourses = SHOW_ALL_COURSES;
+        $searchCourses = SEARCH_COURSES;
 
         $LOGOUT_PAGE = LOGOUT_PAGE;
         $LOGIN_PAGE = LOGIN_PAGE;
@@ -19,6 +24,8 @@ class HomeHtml extends DeleteHtml
         $createNewCourseLink = "";
         $showUserCoursesLink = "";
         $showAllCoursesLink = "";
+        $searchCoursesLink = "";
+        $recoverCoursesLink = "";
         if (is_null($user)) {
             $authenticationNotice = "<a class= 'btn btn-lg btn-light ' href= '$LOGIN_PAGE'>Login</a>";
         } else {
@@ -31,6 +38,8 @@ class HomeHtml extends DeleteHtml
             $createNewCourseLink = "<a class= 'navbar-brand ' href= '$createNewCourseUrl'>Create course</a>";
             $showUserCoursesLink = "<a class= 'navbar-brand ' href= '$showUserCourses'>My courses</a>";
             $showAllCoursesLink = "<a class= 'navbar-brand ' href= '$showAllCourses'>All courses</a>";
+            $searchCoursesLink = "<a class= 'navbar-brand ' href= '$searchCourses'>Search courses</a>";
+            $recoverCoursesLink = "<a class= 'navbar-brand ' href= '/courses/recover'>My deleted courses</a>";
             if ($user->getRole() == ADMIN) {
                 $showUserCreateLink = "<li class= 'nav-item '><a class= 'nav-link ' href= '$showCreatePage'>Add new user</a></li>";
             }
@@ -64,6 +73,8 @@ class HomeHtml extends DeleteHtml
                             $createNewCourseLink
                             $showUserCoursesLink
                             $showAllCoursesLink 
+                            $searchCoursesLink
+                            $recoverCoursesLink
                         </ul>
                     </div>
                 </div>

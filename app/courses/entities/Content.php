@@ -1,5 +1,9 @@
 <?php
 
+namespace app\courses\entities;
+
+use JsonSerializable;
+
 class Content implements JsonSerializable
 {
     private array $texts;
@@ -70,19 +74,19 @@ class Content implements JsonSerializable
     public function jsonSerialize(): array
     {
         $array = [];
-        foreach ($this->texts as $text ){
+        foreach ($this->texts as $text) {
             $array[] = [
                 'type' => 'text',
                 'content' => $text];
         }
-        foreach ($this->linksToTheArticles as $linkToTheArticle ){
+        foreach ($this->linksToTheArticles as $linkToTheArticle) {
             $array[] = [
-                'type'=>'linkToTheArticle',
+                'type' => 'linkToTheArticle',
                 'content' => $linkToTheArticle];
         }
-        foreach ($this->linksToTheVideos as $linkToTheVideo ){
+        foreach ($this->linksToTheVideos as $linkToTheVideo) {
             $array[] = [
-                'type'=>'linkToTheVideo',
+                'type' => 'linkToTheVideo',
                 'content' => $linkToTheVideo
             ];
         }
@@ -98,11 +102,11 @@ class Content implements JsonSerializable
         $linksToTheArticles = [];
         $linksToTheVideos = [];
 
-        foreach ($array as $item){
-            switch ($item['type']){
+        foreach ($array as $item) {
+            switch ($item['type']) {
                 case "text":
                     $texts[] = $item['content'];
-                break;
+                    break;
                 case "linkToTheArticle":
                     $linksToTheArticles[] = $item['content'];
                     break;
@@ -118,5 +122,18 @@ class Content implements JsonSerializable
         $this->linksToTheVideos = $linksToTheVideos;
     }
 
+    public function decodeHtmlSpecialChar(): void
+    {
+        foreach ($this->texts as &$text) {
+            $text = htmlspecialchars_decode($text);
+        }
+        foreach ($this->linksToTheArticles as &$linkToTheArticle) {
+            $linkToTheArticle = htmlspecialchars_decode($linkToTheArticle);
+        }
+        foreach ($this->linksToTheVideos as &$linkToTheVideo) {
+            $linkToTheVideo = htmlspecialchars_decode($linkToTheVideo);
+        }
+
+    }
 
 }

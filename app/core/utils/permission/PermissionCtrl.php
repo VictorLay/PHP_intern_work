@@ -1,5 +1,9 @@
 <?php
 
+namespace app\core\utils\permission;
+
+use app\users\entities\User;
+
 class PermissionCtrl
 {
     //todo replace with enum

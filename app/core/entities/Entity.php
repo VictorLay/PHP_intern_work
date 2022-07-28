@@ -1,5 +1,7 @@
 <?php
 
+namespace app\core\entities;
+
 abstract class Entity
 {
     protected int $id;
@@ -19,7 +21,6 @@ abstract class Entity
     {
         $this->id = $id;
     }
-
 
 
 }

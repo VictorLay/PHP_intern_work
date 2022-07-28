@@ -1,5 +1,13 @@
 <?php
 
+namespace app\courses\models\impl;
+
+use app\courses\entities\Course;
+use app\courses\entities\Content;
+use app\core\models\TransactionImpl;
+use app\courses\models\CourseModel;
+use PDO;
+
 
 class CourseModelImpl extends TransactionImpl implements CourseModel
 {

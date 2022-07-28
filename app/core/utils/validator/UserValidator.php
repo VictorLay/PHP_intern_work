@@ -1,5 +1,10 @@
 <?php
 
+namespace app\core\utils\validator;
+
+use app\core\entities\Entity;
+use app\users\entities\User;
+use app\core\utils\logger\Logger;
 
 class UserValidator
 {

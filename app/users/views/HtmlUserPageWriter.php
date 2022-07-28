@@ -1,5 +1,11 @@
 <?php
 
+namespace app\users\views;
+
+
+use app\users\entities\User;
+use app\users\views\html\ShowUsersHtml;
+
 class HtmlUserPageWriter extends ShowUsersHtml
 {
 

@@ -1,5 +1,9 @@
 <?php
 
+namespace app\users\views\html;
+
+
+use app\users\entities\User;
 
 class DeleteHtml extends AuthenticationHtml
 {

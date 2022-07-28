@@ -1,5 +1,10 @@
 <?php
 
+namespace app\users\views\html;
+
+
+use app\users\entities\User;
+
 class AuthenticationHtml extends ErrorHtml
 {
 
@@ -16,6 +21,29 @@ class AuthenticationHtml extends ErrorHtml
         $loginWarning = is_null($userEmail) ? '' : "<div>Incorrect login or password</div>";
         echo "
         $loginWarning
+        <form action='" . LOGIN_PAGE . "' method='post'><br/>
+            <input type='text' name='mail' placeholder='mail' value='$userEmail'/><br/>
+            <input type='text' name='password' placeholder='password'/><br/>
+            <input type='submit' value='sign user'/><br/><br/>
+            <input type='hidden' name='command' value='sign_in'/>
+        </form>";
+    }
+
+    public static function writeLoginForm(): void
+    {
+        echo "
+        <form action='" . LOGIN_PAGE . "' method='post'><br/>
+            <input type='text' name='mail' placeholder='mail'/><br/>
+            <input type='text' name='password' placeholder='password'/><br/>
+            <input type='submit' value='sign user'/><br/><br/>
+            <input type='hidden' name='command' value='sign_in'/>
+        </form>";
+    }
+
+    public static function writeLoginFormWithWarning(string $userEmail): void
+    {
+        echo "
+       <div>Incorrect login or password</div>
         <form action='" . LOGIN_PAGE . "' method='post'><br/>
             <input type='text' name='mail' placeholder='mail' value='$userEmail'/><br/>
             <input type='text' name='password' placeholder='password'/><br/>
@@ -44,9 +72,9 @@ class AuthenticationHtml extends ErrorHtml
         <form action='$LOGOUT_PAGE' method='post'>
         <input type='hidden' name='sign_out' value='yes'><br/>
         <input type='submit' value='YES' >
-        </form>
-        <form action='$HOME_PAGE' method='post'>
-        <input type='hidden' name='command' value='default'><br/><br/>
+        </form>        
+        <br/><br/>
+        <form action='$HOME_PAGE' method='get'>
         <input type='submit' value='NO' >
         </form>
         ";
